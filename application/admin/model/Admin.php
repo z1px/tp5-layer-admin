@@ -16,7 +16,7 @@ use think\Request;
 class Admin extends Model {
 
     // 设置数据表（不含前缀）
-    protected $name = 'tp5_admin';
+    protected $name = 'admin';
     // 设置主键
     protected $pk = 'id';
 

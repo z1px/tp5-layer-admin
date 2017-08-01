@@ -14,7 +14,7 @@ use think\Model;
 class Menu extends Model {
 
     // 设置数据表（不含前缀）
-    protected $name = 'tp5_menu';
+    protected $name = 'menu';
     // 设置主键
     protected $pk = 'id';
 

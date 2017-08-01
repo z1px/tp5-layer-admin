@@ -15,7 +15,7 @@ use think\Request;
 class BehaviorLog extends Model {
 
     // 设置数据表（不含前缀）
-    protected $name = 'tp5_behavior_log';
+    protected $name = 'behavior_log';
     // 设置主键
     protected $pk = 'id';
 
