@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>Login</title>
+
+	<script>
+        document.write('<link rel="stylesheet" href="__EXTEND_DEMO__/layui/css/layui.css?'+Math.random()+'" media="all" />');
+        document.write('<link rel="stylesheet" href="__ADMIN_DEMO_CSS__/login.css?'+Math.random()+'" />');
+	</script>
+
+</head>
+<body class="beg-login-bg">
+
+<div class="beg-login-box">
+	<header>
+		<h1>后台登录</h1>
+	</header>
+	<div class="beg-login-main">
+		<form action="{:Url('Account/login')}" class="layui-form" method="post">
+			<div class="layui-form-item">
+				<label class="beg-login-icon">
+					<i class="layui-icon">&#xe612;</i>
+				</label>
+				<input type="text" name="userName" lay-verify="userName" autocomplete="off" placeholder="这里输入登录名" class="layui-input">
+			</div>
+			<div class="layui-form-item">
+				<label class="beg-login-icon">
+					<i class="layui-icon">&#xe642;</i>
+				</label>
+				<input type="password" name="password" lay-verify="password" autocomplete="off" placeholder="这里输入密码" class="layui-input">
+			</div>
+			<div class="layui-form-item">
+				<div class="beg-pull-left beg-login-remember">
+					<label>记住帐号？</label>
+					<input type="checkbox" name="rememberMe" value="true" lay-skin="switch" checked title="记住帐号">
+				</div>
+				<div class="beg-pull-right">
+					<button class="layui-btn layui-btn-primary" lay-submit lay-filter="login">
+						<i class="layui-icon">&#xe650;</i> 登录
+					</button>
+				</div>
+				<div class="beg-clear"></div>
+			</div>
+		</form>
+	</div>
+	<footer>
+		<p>Beginner © www.shuowan.com</p>
+	</footer>
+</div>
+<script>
+    document.write("<script type='text/javascript' src='__JS__/jquery-3.2.1.min.js?"+Math.random()+"'><\/script>");
+    document.write("<script type='text/javascript' src='__EXTEND_DEMO__/layui/layui.js?"+Math.random()+"'><\/script>");
+</script>
+<script>
+    layui.use(['layer', 'form'], function() {
+        var layer = layui.layer,
+            form = layui.form();
+
+        form.on('submit(login)',function(data){
+            var name=$('input[name=userName]').val();
+            var pwd=$('input[name=password]').val();
+            if(!name){
+                layer.msg("请输入账号！");
+                return false;
+            }
+            if(!pwd){
+                layer.msg("请输入密码！");
+                return false;
+            }
+            $("form").submit();
+        });
+    });
+</script>
+
+</body>
+</html>

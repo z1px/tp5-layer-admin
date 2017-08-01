@@ -1,0 +1,106 @@
+{layout name="layout:form" /}
+
+<form class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" value="" autocomplete="off" placeholder="请输入菜单名称" class="layui-input" lay-verify="required">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">上级菜单</label>
+        <div class="layui-input-block">
+            <select name="pid" lay-verify="required" lay-search="">
+                <option value="">请选择上级菜单</option>
+                <option value="0" {eq name="pid" value="0"}selected{/eq}>顶级菜单</option>
+                <{volist name="menu" id="vo"}
+                <option value="{$vo.id}" {eq name="pid" value="$vo.id"}selected{/eq}>{$vo.title}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">模块名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="module" value="admin" autocomplete="off" placeholder="请输入模块名称" class="layui-input" lay-verify="required">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">控制器名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="controller" value="" autocomplete="off" placeholder="请输入控制器名称" class="layui-input" lay-verify="required">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">方法名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="action" value="" autocomplete="off" placeholder="请输入方法名称" class="layui-input" lay-verify="required">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">图标</label>
+        <div class="layui-input-block">
+            <input type="text" name="icon" value="" autocomplete="off" placeholder="请输入菜单图标" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单排序</label>
+        <div class="layui-input-block">
+            <input type="number" name="sort" value="1" autocomplete="off" placeholder="请输入权重值" class="layui-input" min="1" max="99" lay-verify="number">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">权限类型</label>
+        <div class="layui-input-block">
+            <input type="radio" name="type" value="1" title="权限控制" checked>
+            <input type="radio" name="type" value="2" title="权限白名单">
+            <!--<input type="radio" name="type" value="3" title="权限黑名单">-->
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单状态</label>
+        <div class="layui-input-block">
+            <input type="radio" name="status" value="1" title="展示" checked>
+            <input type="radio" name="status" value="2" title="不展示">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="form_add">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    layui.use(['form', 'layer'], function() {
+        var form = layui.form(),
+            layer = layui.layer;
+        var layerTips = parent.layerTips === undefined ? (parent.layer === undefined ? layui.layer : parent.layer) : layui.layerTips; //获取父窗口的layer对象
+
+        //自定义验证规则
+        form.verify({
+//            username: [/^[\S]{2,30}$/, '用户组名称必须6到12位，且不能出现空格'],
+        });
+
+        //监听提交
+        form.on('submit(form_add)', function(data) {
+            var ind_load=layerTips.load(2);
+            $.post("{:Url('admin/Menus/add',['pid'=>$pid])}",data.field,function (result) {
+                layerTips.close(ind_load);
+                if(result.code==1){
+                    layerTips.confirm(result.msg,{btn: ['继续添加','重新编辑'],btnAlign:'c',closeBtn:0},function(ind){
+                        layerTips.close(ind);
+                        location.reload();
+                    },function (ind) {
+                        layerTips.close(ind);
+                        location.href=result.data.url_edit;
+                    });
+                }else {
+                    layerTips.msg(result.msg);
+                }
+            },"json");
+            return false;
+        });
+    });
+</script>

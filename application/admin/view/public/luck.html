@@ -1,0 +1,106 @@
+<!--锁屏模板 start-->
+<script type="text/template" id="lock-temp">
+    <div class="admin-header-lock" id="lock-box">
+        <div class="admin-header-lock-img">
+            <img src="__ADMIN_IMAGE__/0.jpg"/>
+        </div>
+        <div class="admin-header-lock-name" id="lockUserName">{notempty name="Think.cookie.login_name"}{$Think.cookie.login_name}{/notempty}</div>
+        <div class="admin-header-lock-btn">
+            <form class="layui-form">
+                <input type="hidden" name="lockUserName" value='{notempty name="account.username"}{$account.username}{/notempty}'>
+                <input type="text" class="admin-header-lock-input" value="输入密码解锁.." name="lockPwd" />
+                <button class="layui-btn layui-btn-small"  lay-submit lay-filter="form_unlock">解锁</button>
+            </form>
+        </div>
+        <div class="admin-header-lock-relogin"><a href="{:Url('admin/Account/login')}">重新登录</a></div>
+    </div>
+</script>
+<!--锁屏模板 end -->
+
+<script>
+
+    layui.use(["layer","form"],function () {
+        var layer = layui.layer;
+        var form = layui.form();
+        var layerTips = parent.layer === undefined ? layui.layer : parent.layer; //获取父窗口的layer对象
+
+        //锁屏
+        {empty name="Think.cookie.luck"}
+        lock();
+        {/empty}
+
+        $(document).on('keydown', function () {
+            var e = window.event;
+            if (e.keyCode === 76 && e.altKey) {
+                //alert("你按下了alt+l");
+                dolock();
+            }
+        });
+
+
+        $('#lock').on('click', function () {
+            dolock();
+        });
+
+        function dolock() {
+            $.post("{:Url('admin/Account/lock')}",{},function (data) {
+                if(data.code==1){
+                    lock();
+                }else{
+                    layerTips.msg(data.msg, { time: 1000 });
+                }
+            },"json");
+        }
+
+        function lock() {
+            //自定页
+            layerTips.open({
+                title: false,
+                type: 1,
+                closeBtn: 0,
+                anim: 6,
+                id: "lucks",
+                content: $('#lock-temp').html(),
+                shade: [0.9, '#393D49'],
+                success: function (layero, lockIndex) {
+                    //给显示用户名赋值
+                    layero.find('input[name=lockPwd]').on('focus', function () {
+                        var $this = $(this);
+                        if ($this.val() === '输入密码解锁..') {
+                            $this.val('').attr('type', 'password');
+                        }
+                    }).on('blur', function () {
+                        var $this = $(this);
+                        if ($this.val() === '' || $this.length === 0) {
+                            $this.attr('type', 'text').val('输入密码解锁..');
+                        }
+                    });
+
+                    //监听解锁按钮的点击事件
+                    form.on('submit(form_unlock)', function(data) {
+
+                        var username = data.field.lockUserName;
+                        var password = data.field.lockPwd;
+                        if (password === '输入密码解锁..' || password.length === 0) {
+                            layerTips.msg('请输入密码..', {time: 1000});
+                            return false;
+                        }
+
+                        $.post("{:Url('admin/Account/unLock')}", { username: username, password: password }, function (data) {
+                            //验证成功
+                            if (data.code==1) {
+                                //关闭锁屏层
+                                layerTips.close(lockIndex);
+                            } else {
+                                layerTips.msg(data.msg, { time: 1000 });
+                            }
+                        }, 'json');
+                        return false;
+                    });
+
+                }
+            });
+        };
+    });
+
+</script>

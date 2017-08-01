@@ -1,0 +1,128 @@
+{layout name="layout:form" /}
+
+<form class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户组</label>
+        <div class="layui-input-block">
+            {eq name="data.id" value="1"}
+            <input type="text" name="group_id" value="{$data.group}"  class="layui-input layui-btn-disabled" disabled>
+            {else/}
+            <select name="group_id" lay-verify="required" lay-search="" {eq name="data.id" value="1"}disabled{/eq}>
+                <option value="">请选择用户组</option>
+                {volist name="group" id="vo"}
+                <option value="{$vo.id}" {eq name="data.group_id" value="$vo.id"}selected{/eq} {neq name="vo.status" value="1"}disabled{/neq} >{$vo.name}{neq name="vo.status" value="1"}（已禁用）{/neq}</option>
+                {/volist}
+            </select>
+            {/eq}
+
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">账号</label>
+        <div class="layui-input-block">
+            <input type="text" name="username" value="{$data.username}" autocomplete="off" placeholder="请输入账号" class="layui-input" lay-verify="required|username">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">真实姓名</label>
+        <div class="layui-input-block">
+            <input type="text" name="true_name" value="{$data.true_name}" autocomplete="off" placeholder="请输入真实姓名" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">手机</label>
+        <div class="layui-input-inline">
+            <input type="tel" name="mobile" value="{$data.mobile}" autocomplete="off" placeholder="请输入手机号" class="layui-input" lay-verify="phone">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">邮箱</label>
+        <div class="layui-input-inline">
+            <input type="text" name="email" value="{$data.email}" autocomplete="off" placeholder="请输入邮箱号" class="layui-input" lay-verify="email">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-inline">
+            <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input" lay-verify="password">
+        </div>
+        <div class="layui-form-mid layui-word-aux">请填写6到12位密码</div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">确认密码</label>
+        <div class="layui-input-inline">
+            <input type="password" name="check_password" placeholder="请再次输入密码" autocomplete="off" class="layui-input" lay-verify="check_password">
+        </div>
+        <div class="layui-form-mid layui-word-aux">请填写6到12位密码</div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">账号状态</label>
+        <div class="layui-input-block">
+            <input type="radio" name="status" value="1" title="正常" {eq name='data.status' value='1'}checked{/eq}>
+            <input type="radio" name="status" value="2" title="禁用"{eq name='data.status' value='2'}checked{/eq}>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="hidden" name="id" value="{$data.id}">
+            <button class="layui-btn" lay-submit lay-filter="form_edit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    layui.use(['form', 'layer'], function() {
+        var form = layui.form(),
+            layer = layui.layer;
+        var layerTips = parent.layerTips === undefined ? (parent.layer === undefined ? layui.layer : parent.layer) : layui.layerTips; //获取父窗口的layer对象
+
+        //自定义验证规则
+        form.verify({
+            username: [/^[A-Za-z0-9\-\_]{2,20}$/, '用户名只能是2-20位的字母、数字和下划线_及破折号-'],
+            phone:function (value) {
+                if(value){
+                    if(!/^1[34578][0-9]{9}$/.test(value)){
+                        return '手机号格式不正确';
+                    }
+                }
+            },
+            email:function (value) {
+                if(value){
+                    if(!/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(value)){
+                        return '邮箱号格式不正确';
+                    }
+                }
+            },
+            password: function (value) {
+                var pwd=$("input[name=password]").val();
+                if(!$("input[name=id]").val()||($("input[name=id]").length>0&&pwd)){
+                    if(!/^[\S]{6,12}$/.test(value)){
+                        return '密码必须6到12位，且不能出现空格';
+                    }
+                }
+
+            },
+            check_password: function(value) {
+                var pwd=$("input[name=password]").val();
+                if(value!=pwd){
+                    return '两次密码不一致';
+                }
+            },
+        });
+
+        //监听提交
+        form.on('submit(form_edit)', function(data) {
+//            data.form.submit();
+            var ind_load=layerTips.load(2);
+            $.post("{:Url('admin/Account/edit')}",data.field,function (result) {
+                layerTips.close(ind_load);
+                if(result.code==1){
+
+                }
+                layerTips.msg(result.msg);
+            },"json");
+            return false;
+        });
+    });
+</script>

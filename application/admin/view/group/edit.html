@@ -1,0 +1,114 @@
+{layout name="layout:form" /}
+
+<!-- head begin -->
+<link rel="stylesheet" href="__ADMIN__/zTree/css/metroStyle/metroStyle.css" />
+<!-- head end -->
+
+<!-- foot begin -->
+<script type="text/javascript" src="__ADMIN__/zTree/js/jquery.ztree.core.min.js"></script>
+<script type="text/javascript" src="__ADMIN__/zTree/js/jquery.ztree.excheck.min.js"></script>
+<!-- foot end -->
+
+<form class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户组名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" value="{$data.name}" autocomplete="off" placeholder="请输入用户组名称" class="layui-input" lay-verify="required|username">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">账号状态</label>
+        <div class="layui-input-block">
+            <input type="radio" name="status" value="1" title="正常" {eq name='data.status' value='1'}checked{/eq}>
+            <input type="radio" name="status" value="2" title="禁用"{eq name='data.status' value='2'}checked{/eq}>
+        </div>
+    </div>
+    <fieldset class="layui-elem-field">
+        <legend>菜单权限设置</legend>
+        <div class="layui-field-box">
+            <ul id="menuTree" class="ztree" data-url="{:Url('admin/Menus/menuTree')}" data-gid="{$data.id}"></ul>
+        </div>
+    </fieldset>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="hidden" name="id" value="{$data.id}">
+            <button class="layui-btn" lay-submit lay-filter="form_edit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    layui.use(['form','layer'], function() {
+        var form = layui.form(),
+            layer = layui.layer;
+        var layerTips = parent.layerTips === undefined ? (parent.layer === undefined ? layui.layer : parent.layer) : layui.layerTips; //获取父窗口的layer对象
+
+        var zTree;
+        // zTree 配置项
+        var setting= {
+            view: {
+                dblClickExpand: true,
+                showLine: true,
+                showIcon: false,
+                selectedMulti: false
+            },
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "id",
+                    pIdKey: "pid"
+                },
+                key: {
+                    name: "title"
+                }
+            }
+        };
+
+        $.post($("#menuTree").data("url"),{group_id:$("#menuTree").data("gid")},function (data) {
+            zTree = $.fn.zTree.init($("#menuTree"), setting, data);
+        });
+
+        //自定义验证规则
+        form.verify({
+            username: [/^[\S]{2,30}$/, '用户组名称必须6到12位，且不能出现空格'],
+        });
+
+        //监听提交
+        form.on('submit(form_edit)', function(data) {
+            var ind_load=layerTips.load(2);
+
+            var auth_rule_ids=[];
+            var checked_ids = zTree.getCheckedNodes(); // 获取当前选中的checkbox
+            $.each(checked_ids, function (index, item) {
+                auth_rule_ids.push(item.id);
+            });
+            data.field["menu_id"]=auth_rule_ids;
+            checked_ids=null;
+            auth_rule_ids=null;
+
+            $.post("{:Url('admin/Group/edit')}",data.field,function (result) {
+                layerTips.close(ind_load);
+                layerTips.msg(result.msg);
+                if(result.code!=1){
+                    //重新加载当前页
+                    var pageIndex=$(".layui-laypage-curr em").text()?$(".layui-laypage-curr em").text():1;
+                    var field={pageIndex:pageIndex};
+                    var form_field=$("form").serializeArray();
+                    if(form_field){
+                        $.each(form_field,function (i,v){
+                            field[v.name]=v.value;
+                        })
+                    }
+                    btable.get(field);
+                    field=form_field=null;
+                }
+            },"json");
+
+            return false;
+        });
+    });
+</script>

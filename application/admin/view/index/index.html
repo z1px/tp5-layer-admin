@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>后台管理系统</title>
+
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- head begin -->
+    <link rel="stylesheet" href="__ADMIN__/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="__ADMIN_CSS__/global.css" media="all" />
+    <link rel="stylesheet" href="__ADMIN_CSS__/font-awesome/css/font-awesome.min.css" />
+    <!-- head end -->
+
+</head>
+
+<body>
+
+<div class="layui-layout layui-layout-admin" style="border-bottom: solid 5px #1aa094;">
+
+    <!-- header begin -->
+    <div class="layui-header header header-demo">
+        <div class="layui-main">
+            <div class="admin-login-box">
+                <a class="logo" style="left: 0;" href="/">
+                    <span style="font-size: 22px;">shuowan.com</span>
+                </a>
+                <div class="admin-side-toggle">
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                </div>
+                <div class="admin-side-full">
+                    <i class="fa fa-life-bouy" aria-hidden="true"></i>
+                </div>
+            </div>
+            <ul class="layui-nav admin-header-item">
+                <li class="layui-nav-item" id="clearCached">
+                    <a href="javascript:;">清除缓存</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;" class="admin-header-user">
+                        <img src="__ADMIN_IMAGE__/0.jpg" />
+                        <span>{notempty name="Think.cookie.login_name"}{$Think.cookie.login_name}{/notempty}</span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd id="myinfo">
+                            <a href="javascript:;"><i class="fa fa-user-circle" aria-hidden="true"></i> 个人信息</a>
+                        </dd>
+                        <!--<dd>-->
+                            <!--<a href="{:Url('admin/Account/setting')}"><i class="fa fa-gear" aria-hidden="true"></i> 设置</a>-->
+                        <!--</dd>-->
+                        <dd id="lock">
+                            <a href="javascript:;">
+                                <i class="fa fa-lock" aria-hidden="true" style="padding-right: 3px;padding-left: 1px;"></i> 锁屏 (Alt+L)
+                            </a>
+                        </dd>
+                        <dd>
+                            <a href="{:Url('admin/Account/logout')}"><i class="fa fa-sign-out" aria-hidden="true"></i> 注销</a>
+                        </dd>
+                    </dl>
+                </li>
+            </ul>
+            <ul class="layui-nav admin-header-item-mobile">
+                <li class="layui-nav-item">
+                    <a href="{:Url('admin/Account/logout')}"><i class="fa fa-sign-out" aria-hidden="true"></i> 注销</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- header end -->
+
+    <!-- menu begin -->
+    <div class="layui-side layui-bg-black" id="admin-side" data-url="{:Url('admin/Datas/ajaxMenu')}">
+        <div class="layui-side-scroll" id="admin-navbar-side" lay-filter="side"></div>
+    </div>
+    <!-- menu end -->
+
+    <!-- main begin -->
+    <div class="layui-body" style="bottom: 0;border-left: solid 2px #1AA094;" id="admin-body">
+        <div class="layui-tab admin-nav-card layui-tab-brief" lay-filter="admin-tab">
+            <ul class="layui-tab-title">
+                <li class="layui-this">
+                    <i class="fa fa-dashboard" aria-hidden="true"></i>
+                    <cite>控制面板</cite>
+                </li>
+            </ul>
+            <div class="layui-tab-content" style="min-height: 150px; padding: 5px 0 0 0;">
+                <div class="layui-tab-item layui-show">
+                    <iframe src="/index/main.html"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- main end -->
+
+    <!-- footer begin -->
+    <div class="layui-footer footer footer-demo" id="admin-footer">
+        <div class="layui-main">
+            <p>2016 &copy;
+                <a href="http://www.shuowan.com/">shuowan.com</a>
+            </p>
+        </div>
+    </div>
+    <!-- footer end -->
+
+    <div class="site-tree-mobile layui-hide">
+        <i class="layui-icon">&#xe602;</i>
+    </div>
+    <div class="site-mobile-shade"></div>
+
+</div>
+
+<!-- foot begin -->
+<script type="text/javascript" src="__ADMIN_JS__/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="__ADMIN__/layui/layui.js"></script>
+<script type="text/javascript" src="__ADMIN_JS__/index.js"></script>
+<script type="text/javascript" src="__ADMIN_JS__/layui.js"></script>
+<!-- foot end -->
+
+<script type="text/javascript">
+    layui.config({
+        base: '/static/admin/layui/modules/',
+        version: new Date().getTime()
+    }).use([ 'layer', 'tab', 'navbar'], function () {
+        var layer = layui.layer,
+            tab = layui.tab(),
+            navbar = layui.navbar();
+
+        $('#myinfo').on('click', function () {
+
+//            tab.tabAdd({
+//                href: '{:Url("admin/Account/myinfo")}',
+//                icon: 'fa-user-circle',
+//                title: '个人信息'
+//            });
+
+            layer.open({
+                type: 2,//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
+                title: '个人信息',
+                maxmin: true, //最大最小化
+                area : ['465px','500px'],//宽高
+                content: '{:Url("admin/Account/myinfo")}'
+            });
+
+        });
+
+        $('#setting').on('click', function () {
+            tab.tabAdd({
+                href: '{:Url("admin/Index/setting")}',
+                icon: 'fa-gear',
+                title: '设置'
+            });
+        });
+
+        //清除缓存
+        $('#clearCached').on('click', function () {
+            navbar.cleanCached();
+            $.get('{:Url("admin/Index/clearCached")}');
+            layer.alert('清除完成!', { icon: 1, title: '系统提示' }, function () {
+                location.reload();//刷新
+            });
+        });
+    })
+</script>
+
+<!-- luck begin -->
+{include file="public:luck" /}
+<!-- luck end -->
+
+</body>
+</html>

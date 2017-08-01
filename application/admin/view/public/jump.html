@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>msg</title>
+
+    <link rel="stylesheet" href="__ADMIN__/layui/css/layui.css" media="all" />
+
+</head>
+
+<body>
+
+<div style="margin: 15px;">
+
+    <!-- main begin -->
+
+    <!-- main end -->
+
+</div>
+
+<script type="text/javascript" src="__ADMIN_JS__/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="__ADMIN__/layui/layui.js"></script>
+
+<script>
+    layui.use(['layer'], function() {
+        var layer = layui.layer;
+        var layerTips = parent.layerTips === undefined ? (parent.layer === undefined ? layui.layer : parent.layer) : layui.layerTips; //获取父窗口的layer对象
+
+        layerTips.alert('{$msg}', {
+            title: '信息提示',//提示窗标题
+            closeBtn:0,//关闭按钮不显示
+            btnAlign:'c',//按钮居中
+            icon: '{eq name="code" value="1"}1{else/}2{/eq}' //图标
+        }, function(index){
+            layerTips.close(index);
+            {if condition="$code eq 0 && $data eq 'auth'"}
+                layerTips.closeAll();
+            {else /}
+                location.href='{$url}';
+            {/if}
+        });
+    });
+</script>
+
+</body>
+</html>

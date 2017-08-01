@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>city</title>
+
+	<!-- head begin -->
+	<script>
+        document.write('<link rel="stylesheet" href="__EXTEND_DEMO__/layui/css/layui.css?'+Math.random()+'" media="all" />');
+	</script>
+	<!-- head end -->
+
+</head>
+<body>
+
+<!-- main begin -->
+<div id="city"></div>
+<!-- main end -->
+
+<!-- foot begin -->
+<script>
+    document.write('<script type="text/javascript" src="__JS__/jquery-3.2.1.min.js?'+Math.random()+'"><\/script>');
+    document.write('<script type="text/javascript" src="__EXTEND_DEMO__/layui/layui.js?'+Math.random()+'"><\/script>');
+</script>
+<!-- foot end -->
+<script>
+    layui.config({
+        base: '/static/admin_demo/js/'
+    }).use('city', function() {
+        var city = layui.city,
+            $ = layui.jquery;
+
+        $('#city').citys({
+            code: 110000
+        });
+
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>bable</title>
+
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- head begin -->
+    {include file="public:head" /}
+    <link rel="stylesheet" href="__ADMIN_CSS__/btable.css" />
+    <!-- head end -->
+
+    <!-- foot begin -->
+    {include file="public:foot" /}
+    <script>
+        layui.config({
+            base: '/static/admin/layui/modules/',
+            v: new Date().getTime()
+        });
+    </script>
+    <!-- foot end -->
+
+</head>
+<body style="background-color: gainsboro;">
+
+<!-- main begin -->
+<div style="background-color: white; margin:0 10px;">
+
+    <!-- main begin -->
+    {__CONTENT__}
+    <!-- main end -->
+
+</div>
+<!-- main end -->
+
+<!-- luck begin -->
+{include file="public:luck" /}
+<!-- luck end -->
+
+</body>
+</html>

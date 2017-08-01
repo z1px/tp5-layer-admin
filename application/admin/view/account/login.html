@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+
+    <script>
+        document.write('<link rel="stylesheet" href="__ADMIN__/layui/css/layui.css?'+Math.random()+'" media="all" />');
+        document.write('<link rel="stylesheet" href="__ADMIN_CSS__/login.css?'+Math.random()+'" />');
+    </script>
+
+</head>
+<body class="beg-login-bg">
+
+<div class="beg-login-box">
+    <header>
+        <h1>后台登录</h1>
+    </header>
+    <div class="beg-login-main">
+        <form action="{:Url('admin/Account/login')}" class="layui-form" method="post">
+            <div class="layui-form-item">
+                <label class="beg-login-icon">
+                    <i class="layui-icon">&#xe612;</i>
+                </label>
+                <input type="text" name="username" lay-verify="required" autocomplete="off" placeholder="这里输入登录名" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+                <label class="beg-login-icon">
+                    <i class="layui-icon">&#xe642;</i>
+                </label>
+                <input type="password" name="password" lay-verify="required" autocomplete="off" placeholder="这里输入密码" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+                <label class="beg-login-icon">
+                    <i class="layui-icon">&#xe62e;</i>
+                </label>
+                <input type="text" name="captcha" lay-verify="required" autocomplete="off" placeholder="这里输入验证码" class="layui-input">
+                <img class="captcha" src="{:captcha_src()}" onclick="this.src='{:captcha_src()}?time='+Math.random();"/>
+            </div>
+            <div class="layui-form-item">
+                <div class="beg-pull-left beg-login-remember">
+                    <label>记住帐号？</label>
+                    <input type="checkbox" name="rememberMe" value="true" lay-skin="switch" checked title="记住帐号">
+                </div>
+                <div class="beg-pull-right">
+                    <button class="layui-btn layui-btn-primary" lay-submit lay-filter="login">
+                        <i class="layui-icon">&#xe650;</i> 登录
+                    </button>
+                </div>
+                <div class="beg-clear"></div>
+            </div>
+        </form>
+    </div>
+    <footer>
+        <p>Beginner © www.shuowan.com</p>
+    </footer>
+</div>
+<script>
+    document.write('<script type="text/javascript" src="__ADMIN_JS__/jquery-3.2.1.min.js?'+Math.random()+'"><\/script>');
+    document.write('<script type="text/javascript" src="__ADMIN__/layui/layui.js?'+Math.random()+'"><\/script>');
+</script>
+<script>
+    layui.use(['layer', 'form'], function() {
+        var layer = layui.layer,
+            form = layui.form();
+
+        form.on('submit(login)',function(data){
+            var ind_load=layer.load(2);
+            $.post("{:Url('admin/Account/login')}",data.field,function (result) {
+                layer.close(ind_load);
+                if(result.code==1){
+                    layer.alert(result.msg, {
+                        time: 0, //不自动关闭
+                        btnAlign:'c',
+                        closeBtn: 0
+                    }, function(){
+                        location.href="/";
+                    });
+                }else {
+                    $("img.captcha").attr("src",'{:captcha_src()}?time='+Math.random()+'');
+                    layer.msg(result.msg);
+                }
+            },"json");
+            return false;
+//            $("form").submit();
+        });
+    });
+</script>
+
+</body>
+</html>

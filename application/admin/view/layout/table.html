@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>table</title>
+
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<!-- head begin -->
+	{include file="public:head" /}
+	<link rel="stylesheet" href="__ADMIN_CSS__/table.css" />
+	<!-- head end -->
+
+	<!-- foot begin -->
+	{include file="public:foot" /}
+	<script>
+        layui.config({
+            base: '/static/admin/layui/modules/',
+//            v: new Date().getTime()
+        });
+	</script>
+	<!-- foot end -->
+
+</head>
+<body>
+
+<div class="admin-main">
+
+	<!-- main begin -->
+	{__CONTENT__}
+	<!-- main end -->
+
+</div>
+
+<!-- luck begin -->
+{include file="public:luck" /}
+<!-- luck end -->
+
+</body>
+</html>
