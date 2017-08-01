@@ -60,7 +60,7 @@
                 field: 'url',
                 sortable: false,
                 format: function (val,obj) {
-                    return obj.url+"（"+obj.type+"）"
+                    return "<a href='"+obj.url+"' target='_blank'>"+obj.url+"</a>（"+obj.type+"）"
                 }
             },  {
                 fieldName: '请求参数',

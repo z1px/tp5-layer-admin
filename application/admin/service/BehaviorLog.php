@@ -49,8 +49,8 @@ class BehaviorLog extends \app\admin\model\BehaviorLog {
         }else{
             foreach ($list as $key=>$value){
                 $list[$key]=$value->append(["username"])->toArray();
-                $list[$key]["params"]=unserialize($list[$key]["params"]);
-                $list[$key]["result"]=unserialize($list[$key]["result"]);
+                $list[$key]["params"]=array_map(function($val){return is_array($val)?str_replace('"',"",json_encode($val)):$val;},unserialize($list[$key]["params"]));
+                $list[$key]["result"]=array_map(function($val){return is_array($val)?str_replace('"',"",json_encode($val)):$val;},unserialize($list[$key]["result"]));
             }
             unset($key,$value);
         }
