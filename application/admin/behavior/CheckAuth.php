@@ -22,6 +22,9 @@ class CheckAuth extends Common {
     public function run(){
 
         $request=Request::instance();
+
+        if(strtolower($request->controller())==="demo") return true;//demo示例不需要权限验证
+
         $authMenu=new AuthMenu();
 
         $whiteAuth=$authMenu->whiteAuth();//白名单菜单，不管是否登录都可以
