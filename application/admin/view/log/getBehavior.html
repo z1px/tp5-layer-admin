@@ -1,17 +1,14 @@
 {layout name="layout:btable" /}
 
-<blockquote class="layui-elem-quote">
-    <button type="button" class="layui-btn layui-btn-small" id="edit"><i class="fa fa-plus" aria-hidden="true"></i> 添加</button>
+<blockquote class="layui-elem-quote" style="overflow:hidden;">
     <form class="layui-form" style="float:right;">
         <div class="layui-form-item" style="margin:0;">
-            <label class="layui-form-label">账号状态</label>
+            <label class="layui-form-label">时间范围</label>
             <div class="layui-input-inline">
-                <select name="status" lay-filter="search_status">
-                    <option value="">请选择账号状态</option>
-                    <option value="">全部</option>
-                    <option value="1">正常</option>
-                    <option value="2">禁用</option>
-                </select>
+                <input type="text" name="begin_date" placeholder="开始日" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="end_date" placeholder="截止日" autocomplete="off" class="layui-input">
             </div>
             <label class="layui-form-label">关键字</label>
             <div class="layui-input-inline">
@@ -26,8 +23,9 @@
 <div id="content" style="width: 100%;height: 533px;"></div>
 
 <script>
-    layui.use(['btable', 'form','layer'], function () {
+    layui.use(['btable', 'form','layer', 'laydate'], function () {
         var btable = layui.btable(),
+            laydate = layui.laydate,
             layerTips = parent.layer === undefined ? layui.layer : parent.layer, //获取父窗口的layer对象
             layer = layui.layer,//获取当前窗口的layer对象;
             form = layui.form();
@@ -60,7 +58,7 @@
                 field: 'url',
                 sortable: false,
                 format: function (val,obj) {
-                    return "<a href='"+obj.url+"' target='_blank'>"+obj.url+"</a>（"+obj.type+"）"
+                    return val?"<a href='"+obj.url+"' target='_blank'>"+obj.url+"</a>（"+obj.type+"）":"";
                 }
             },  {
                 fieldName: '请求参数',
@@ -128,29 +126,44 @@
         btable.render();
         //监听搜索表单的提交事件
         form.on('submit(search)', function (data) {
+            console.log(data.field);
             btable.get(data.field);
             return false;
         });
-        //监听搜索表单的提交事件
-        form.on('select(search_status)', function(data){
-            //重新加载当前页
-            var field={status:data.value};
-            var form_field=$("form").serializeArray();
-            if(form_field){
-                $.each(form_field,function (i,v){
-                    field[v.name]=v.value;
-                })
-            }
-            btable.get(field);
-            field=form_field=null;
-            return false;
-        });
-
 
         $(window).on('resize', function (e) {
             var $that = $(this);
             $('#content').height($that.height() - 92);
         }).resize();
+
+        var start = {
+            min: "2017-07-01 00:00:00",
+            max: laydate.now(),
+            istoday: false,
+            choose: function(datas){
+                end.min = datas; //开始日选好后，重置结束日的最小日期
+                end.start = datas //将结束日的初始值设定为开始日
+            }
+        };
+
+        var end = {
+            min: "2017-07-01 00:00:00",
+            max: laydate.now(),
+            istoday: false,
+            choose: function(datas){
+                start.max = datas; //结束日选好后，重置开始日的最大日期
+            }
+        };
+
+        $("input[name=begin_date]").click(function () {
+            start.elem = this;
+            laydate(start);
+        });
+
+        $("input[name=end_date]").click(function () {
+            end.elem = this;
+            laydate(end);
+        });
 
     });
 

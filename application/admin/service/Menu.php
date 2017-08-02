@@ -143,7 +143,7 @@ class Menu extends \app\admin\model\Menu {
         if(!isset($row["pageSize"])) $row["pageSize"]=10;
         $where=[];
         $order="id desc";
-        if(isset($row["keyword"])) $where["name"]=["like","%{$row["keyword"]}%"];
+        if(isset($row["keyword"])) $where["title|module|controller|action"]=["like","%{$row["keyword"]}%"];
         if(isset($row["status"])) $where["status"]=$row["status"];
         if(isset($row["type"])) $where["type"]=$row["type"];
         if(isset($row["sort"])){

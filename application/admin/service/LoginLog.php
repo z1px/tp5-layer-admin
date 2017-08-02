@@ -36,6 +36,16 @@ class LoginLog extends \app\admin\model\LoginLog {
                 $order="{$row["sort"]} {$row["order"]}";
             }
         }
+        if(!isset($row["begin_date"])) $row["begin_date"]="";
+        if(!isset($row["end_date"])) $row["end_date"]="";
+        if(!empty($row["begin_date"])&&empty($row["end_date"])){
+            $where["create_time"]=["egt",strtotime($row["begin_date"]." 00:00:00")];
+        }elseif(empty($row["begin_date"])&&!empty($row["end_date"])){
+            $where["create_time"]=["elt",strtotime($row["end_date"]." 23:59:59")];
+        }elseif(!empty($row["begin_date"])&&!empty($row["end_date"])){
+            $where["create_time"]=["between",[strtotime($row["begin_date"]." 00:00:00"),strtotime($row["end_date"]." 23:59:59")]];
+        }
+
         $list=$this->field("id,id copy_id,admin_id,account,ip,area,create_time")->where($where)->page($row["pageIndex"],$row["pageSize"])->order($order)->select();
         $this->result["rel"]=true;
         $this->result["count"]=$this->where($where)->Count();

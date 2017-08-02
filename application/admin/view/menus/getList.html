@@ -64,7 +64,7 @@
             <td>{{ item.id }}</td>
             <td>{{ item.title }}</td>
             <td>{{ item.ptitle }}</td>
-            <td>{{ item.url }}</td>
+            <td><a href="{{ item.url }}" target="_blank">{{ item.url }}</a></td>
             <td><i class="fa {{ item.icon }}"></i></td>
             <td>{{ item.sort }}</td>
             <td>{{ item.type_name }}</td>
@@ -138,6 +138,20 @@
         //监听搜索表单的提交事件
         form.on('submit(search)', function (data) {
             paging.get(data.field);
+            return false;
+        });
+        //监听搜索表单的提交事件
+        form.on('select(search_status)', function(data){
+            //重新加载当前页
+            var field={status:data.value};
+            var form_field=$("form").serializeArray();
+            if(form_field){
+                $.each(form_field,function (i,v){
+                    field[v.name]=v.value;
+                })
+            }
+            paging.get(field);
+            field=form_field=null;
             return false;
         });
 

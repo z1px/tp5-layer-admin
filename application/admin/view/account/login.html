@@ -79,6 +79,7 @@
                 }else {
                     $("img.captcha").attr("src",'{:captcha_src()}?time='+Math.random()+'');
                     layer.msg(result.msg);
+                    $("input[name=captcha]").val("").focus();
                 }
             },"json");
             return false;

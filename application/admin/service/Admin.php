@@ -212,7 +212,7 @@ class Admin extends \app\admin\model\Admin {
                 $order="{$row["sort"]} {$row["order"]}";
             }
         }
-        $list=$this->field("id,id copy_id,group_id,username,true_name,mobile,email,status,create_time,last_login_time")->where($where)->page($row["pageIndex"],$row["pageSize"])->order($order)->select();
+        $list=$this->field("id,id copy_id,group_id,username,true_name,mobile,email,status,create_time,last_login_time,ip,area")->where($where)->page($row["pageIndex"],$row["pageSize"])->order($order)->select();
         $this->result["rel"]=true;
         $this->result["count"]=$this->where($where)->Count();
         unset($row,$where);
@@ -220,6 +220,7 @@ class Admin extends \app\admin\model\Admin {
             $list=[];
         }else{
             foreach ($list as $key=>$value){
+                $value->last_login_time=date("Y-m-d H:i:s",$value->last_login_time);
                 $list[$key]=$value->append(["group","status_name"])->toArray();
                 $list[$key]["url_edit"]=Url::build('admin/Account/edit',['id'=>$value->id]);
                 $list[$key]["url_del"]=Url::build('admin/Account/del',['id'=>$value->id]);

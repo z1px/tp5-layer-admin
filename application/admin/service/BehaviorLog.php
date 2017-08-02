@@ -25,7 +25,8 @@ class BehaviorLog extends \app\admin\model\BehaviorLog {
         if(!isset($row["pageSize"])) $row["pageSize"]=10;
         $where=[];
         $order="id desc";
-        if(isset($row["keyword"])) $where["params|result"]=["like","%{$row["keyword"]}%"];
+        if(isset($row["keyword"])) $where["title|module|controller|action|url|params|result"]=["like","%{$row["keyword"]}%"];
+        if(isset($row["title"])) $where["title"]=["like","%{$row["title"]}%"];
         if(isset($row["params"])) $where["params"]=["like","%{$row["params"]}%"];
         if(isset($row["result"])) $where["result"]=["like","%{$row["result"]}%"];
         if(isset($row["module"])) $where["module"]=$row["module"];
@@ -40,6 +41,16 @@ class BehaviorLog extends \app\admin\model\BehaviorLog {
                 $order="{$row["sort"]} {$row["order"]}";
             }
         }
+        if(!isset($row["begin_date"])) $row["begin_date"]="";
+        if(!isset($row["end_date"])) $row["end_date"]="";
+        if(!empty($row["begin_date"])&&empty($row["end_date"])){
+            $where["create_time"]=["egt",strtotime($row["begin_date"]." 00:00:00")];
+        }elseif(empty($row["begin_date"])&&!empty($row["end_date"])){
+            $where["create_time"]=["elt",strtotime($row["end_date"]." 23:59:59")];
+        }elseif(!empty($row["begin_date"])&&!empty($row["end_date"])){
+            $where["create_time"]=["between",[strtotime($row["begin_date"]." 00:00:00"),strtotime($row["end_date"]." 23:59:59")]];
+        }
+
         $list=$this->field("id,id copy_id,admin_id,title,module,controller,action,url,type,params,result,ip,area,create_time")->where($where)->page($row["pageIndex"],$row["pageSize"])->order($order)->select();
         $this->result["rel"]=true;
         $this->result["count"]=$this->where($where)->Count();
