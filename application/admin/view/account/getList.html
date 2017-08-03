@@ -66,7 +66,7 @@
                 format: function (val,obj) {
                     var html='';
                     if(val){
-                        html+='<input type="checkbox" name="status" lay-skin="switch" lay-text="正常|禁用" lay-filter="switchStatus" data-id="'+obj.id+'" '+(obj.status==1?"checked":"")+'>';
+                        html+='<input type="checkbox" name="status" lay-skin="switch" lay-text="正常|禁用" lay-filter="switchStatus" data-id="'+obj.id+'" '+(obj.status==1?"checked":"")+' '+(obj.id==1?"disabled":"")+'>';
                     }
                     return html;
                 }

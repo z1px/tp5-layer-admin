@@ -178,6 +178,11 @@ class Admin extends \app\admin\model\Admin {
             unset($validate);
             return $this->result;
         }
+        if($row["id"]==1){
+            $this->result["code"]=0;
+            $this->result["msg"]="系统账号不可以禁用";
+            return $this->result;
+        }
         $id=$row["id"];
         unset($row["id"]);
         $data=$this->field("id,status")->find($id);
