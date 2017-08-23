@@ -18,12 +18,13 @@ class BehaviorLog extends Common {
 
     public function run(&$params,$extra=[]){
 
+        if(empty($this->request)) $this->request=Request::instance();
+
         if(!$this->request->isPost()&&!$this->request->isAjax()) return ;
 
         $allow_action=["add","edit","del","myinfo","editStatus"];
         if(!in_array($this->request->action(),$allow_action)) return ;
 
-        if(empty($this->request)) $this->request=Request::instance();
         $row=[
             "title"=>"",
             "module"=>$this->request->module(),
