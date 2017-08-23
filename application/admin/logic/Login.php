@@ -167,7 +167,7 @@ class Login {
             $this->result["msg"]="请先登陆";
             return $this->result;
         }
-        if(empty(Cookie::get("login_key"))||empty(Cookie::get("login_id"))||empty(Cookie::get("login_name"))){
+        if(!Cookie::get("login_key")||!Cookie::get("login_id")||!Cookie::get("login_name")){
             $this->result["code"]=0;
             $this->result["msg"]="请先登陆";
             return $this->result;
