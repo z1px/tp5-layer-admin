@@ -15,7 +15,9 @@ use think\Model;
 class AdminGroup extends Model {
 
     // 设置数据表（不含前缀）
-    protected $name = 'admin_group';
+//    protected $name = 'admin_group';
+    // 设置当前模型对应的完整数据表名称
+    protected $table = 'tp5_admin_group';
     // 设置主键
     protected $pk = 'id';
 

@@ -15,7 +15,9 @@ use think\Request;
 class LoginLog extends Model {
 
     // 设置数据表（不含前缀）
-    protected $name = 'login_log';
+//    protected $name = 'login_log';
+    // 设置当前模型对应的完整数据表名称
+    protected $table = 'tp5_login_log';
     // 设置主键
     protected $pk = 'id';
 
