@@ -82,3 +82,6 @@
     top: -5px;
     right: 11px;
 }
+
+/*表单搜索宽度自适应*/
+.layui-form-label{width: auto;}

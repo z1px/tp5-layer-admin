@@ -86,7 +86,7 @@ class AuthMenu {
 //                $where["type"]=2;
             }else{
                 $where["id"]=["in",$group->menu_id];
-                $order="field(id,{$group->menu_id}) desc,".$order;
+//                $order="field(id,{$group->menu_id}) desc,".$order;
             }
         }
         $field=trim($field,",");

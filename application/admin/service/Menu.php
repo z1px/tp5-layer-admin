@@ -9,28 +9,29 @@
 namespace app\admin\service;
 
 
+use \app\admin\model\Menu as MenuModel;
 use think\Loader;
+use think\Request;
 use think\Url;
 
-class Menu extends \app\admin\model\Menu {
-
-    //返回结果
-    protected $result=[
-        "code"=>1,
-        "msg"=>"data normal",
-        "data"=>[],
-    ];
+class Menu extends MenuModel {
 
 
     public function add($row){
 
-        $validate = Loader::validate('MenuAdd');
-        if(!$validate->check($row)){
+        $validate = Loader::validate('Menu');
+        if(!$validate->scene("add")->check($row)){
             $this->result["code"]=0;
             $this->result["msg"]=$validate->getError();
             unset($validate);
             return $this->result;
         }
+
+        //修复菜单添加的时候修改上级菜单没有生效的bug，主要是前端没办法通过PHP和JS生成地址
+        $post=Request::instance()->post();
+        if(isset($post["pid"])) $row["pid"]=$post["pid"];
+        unset($post);
+
         $this->allowField(true)->isUpdate(false)->save($row);
         if(empty($this->id)){
             $this->result["code"]=0;
@@ -44,8 +45,8 @@ class Menu extends \app\admin\model\Menu {
 
     public function edit($row){
 
-        $validate = Loader::validate('MenuEdit');
-        if(!$validate->check($row)){
+        $validate = Loader::validate('Menu');
+        if(!$validate->scene("edit")->check($row)){
             $this->result["code"]=0;
             $this->result["msg"]=$validate->getError();
             unset($validate);
@@ -72,8 +73,8 @@ class Menu extends \app\admin\model\Menu {
 
     public function editStatus($row){
 
-        $validate = Loader::validate('EditStatus');
-        if(!$validate->check($row)){
+        $validate = Loader::validate('Menu');
+        if(!$validate->scene("edit_status")->check($row)){
             $this->result["code"]=0;
             $this->result["msg"]=$validate->getError();
             unset($validate);
@@ -87,12 +88,12 @@ class Menu extends \app\admin\model\Menu {
             $this->result["msg"]="数据不存在，修改失败";
             return $this->result;
         }
-        $res=$data->allowField(["status"])->save($row);
+        $res=$data->allowField(["status","update_time"])->save($row);
         if(empty($res)){
             $this->result["code"]=0;
             $this->result["msg"]="修改失败";
         }else{
-            $this->result=$this->getById($id);
+//            $this->result=$this->getById($id);
             $this->result["msg"]="修改成功";
         }
         return $this->result;
@@ -144,8 +145,11 @@ class Menu extends \app\admin\model\Menu {
         $where=[];
         $order="id desc";
         if(isset($row["keyword"])) $where["title|module|controller|action"]=["like","%{$row["keyword"]}%"];
-        if(isset($row["status"])) $where["status"]=$row["status"];
-        if(isset($row["type"])) $where["type"]=$row["type"];
+        array_map(function ($value) use (&$where,$row){
+            if(isset($row[$value])) $where[$value]=$row[$value];
+        },
+            ["title","module","controller","action","type","status","pid"]
+        );
         if(isset($row["sort"])){
             if(!empty($row["sort"])){
                 if($row["sort"]=="status_name") $row["sort"]="status";

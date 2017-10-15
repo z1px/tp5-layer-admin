@@ -1,0 +1,113 @@
+{layout name="layout:btable" /}
+
+<blockquote class="layui-elem-quote" style="overflow:visible;">
+    <button type="button" class="layui-btn layui-btn-small" id="edit"><i class="fa fa-plus" aria-hidden="true"></i> 添加</button>
+    <form class="layui-form" style="float:right;">
+        <div class="layui-form-item" style="margin:0;">
+            <label class="layui-form-label">用户组</label>
+            <div class="layui-input-inline">
+                <select name="group_id" lay-filter="">
+                    <option value="">请选择用户组</option>
+                    <option value="">请选择用户组</option>
+                    <option value="0">0=>系统管理员</option>
+                    {volist name="list_group" id="vo"}
+                    <option value="{$vo.id}">{$vo.id}=>{$vo.name}</option>
+                    {/volist}
+                </select>
+            </div>
+            <label class="layui-form-label">账号状态</label>
+            <div class="layui-input-inline">
+                <select name="status" lay-filter="">
+                    <option value="">请选择账号状态</option>
+                    <option value="">请选择账号状态</option>
+                    {volist name="list_status" id="vo"}
+                    <option value="{$key}">{$vo}</option>
+                    {/volist}
+                </select>
+            </div>
+            <label class="layui-form-label">关键字</label>
+            <div class="layui-input-inline">
+                <input type="text" name="keyword" placeholder="支持模糊查询.." autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux" style="padding:0;">
+                <button lay-filter="search" class="layui-btn" lay-submit><i class="fa fa-search" aria-hidden="true"></i> 查询</button>
+            </div>
+        </div>
+    </form>
+    <div class="layui-clear"></div>
+</blockquote>
+<div id="content" style="width: 100%;height: 533px;"></div>
+
+<script>
+
+    var columns=[{ //配置数据列
+        fieldName: '编号',
+        field: 'id',
+        sortable: true
+    },  {
+        fieldName: '账号',
+        field: 'username',
+        sortable: false
+    },  {
+        fieldName: '真实姓名',
+        field: 'true_name',
+        sortable: false
+    },  {
+        fieldName: '手机号',
+        field: 'mobile',
+        sortable: false
+    },  {
+        fieldName: '邮箱号',
+        field: 'email',
+        sortable: false
+    }, {
+        fieldName: '状态',
+        field: 'status_name',
+        sortable: true,
+        format: function (val,obj) {
+            var html='';
+            if(val){
+                html+='<input type="checkbox" name="status" lay-skin="switch" lay-text="正常|禁用" lay-filter="switchStatus" data-url=\'{:Url("admin/Account/editStatus")}\' data-id="'+obj.id+'" '+(obj.status==1?"checked":"")+' '+(obj.id==1?"disabled":"")+'>';
+            }
+            return html;
+        }
+    }, {
+        fieldName: '添加时间',
+        field: 'create_time',
+        sortable: true
+    }, {
+        fieldName: '最后登录时间',
+        field: 'last_login_time',
+        sortable: true
+    }, {
+        fieldName: '最后登录IP',
+        field: 'ip',
+        sortable: false
+    }, {
+        fieldName: '最后登录地区',
+        field: 'area',
+        sortable: false
+    }, {
+        fieldName: '用户组',
+        field: 'group',
+        sortable: false
+    }, {
+        fieldName: '操作',
+        field: 'copy_id',
+        format: function (val,obj) {
+            var html='';
+            if(val){
+                html+='<input type="button" value="编辑" data-action="edit" data-id="' + val + '" data-url="'+obj.url_edit+'" class="layui-btn layui-btn-mini" />';
+                html+='<input type="button" value="删除" data-action="del" data-id="' + val + '" data-url="'+obj.url_del+'" class="layui-btn layui-btn-mini layui-btn-danger '+(val==1?'layui-btn-disabled':"")+'" />';
+            }
+            return html;
+        }
+    }];
+
+    var title='td[data-field=username]';//弹窗标题展示的字段
+    var area=['470px','550px'];//弹窗大小
+    var content_url='{:Url("admin/Account/getList")}';//表格内容请求接口
+    var edit_url='{:Url("admin/Account/add")}';//添加数据请求接口
+    var switch_url='{:Url("admin/Account/editStatus")}';//状态切换请求接口
+
+</script>

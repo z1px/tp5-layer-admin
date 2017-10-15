@@ -22,7 +22,7 @@ class BehaviorLog extends Common {
 
         if(!$this->request->isPost()&&!$this->request->isAjax()) return ;
 
-        $allow_action=["add","edit","del","myinfo","editStatus"];
+        $allow_action=["add","edit","del","myinfo","editStatus","recharge"];
         if(!in_array($this->request->action(),$allow_action)) return ;
 
         $row=[
@@ -32,8 +32,8 @@ class BehaviorLog extends Common {
             "action"=>$this->request->action(),
             "url"=>$this->request->url(true),
             "type"=>"",
-            "params"=>serialize($this->params),
-            "result"=>serialize($this->result),
+            "params"=>empty($this->params)?"":json_encode($this->params),
+            "result"=>empty($this->result)?"":json_encode($this->result),
             "admin_id"=>Cookie::get("login_id"),
         ];
         $menu=new Menu();

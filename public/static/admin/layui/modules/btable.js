@@ -292,7 +292,7 @@ layui.define(['element', 'common', 'paging', 'form'], function (exports) {
         tpl += '{{# layui.each(d.list, function(index, item){ }}';
         var tds = '';
         for (var i = 0; i < columns.length; i++) {
-            tds += '<td data-field="' + columns[i].field + '">{{ item.' + columns[i].field + ' }}</td>';
+            tds += '<td data-label="' + columns[i].fieldName + '" data-field="' + columns[i].field + '">{{ item.' + columns[i].field + ' }}</td>';
         }
         if (options.checkbox) {
             tds = '<td><input type="checkbox" data-item="id" data-id="{{ item.' + options.field + ' }}" lay-skin="primary" /></td><td>{{ (index+1) }}</td>' + tds;

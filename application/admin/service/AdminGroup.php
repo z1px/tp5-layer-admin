@@ -9,23 +9,17 @@
 namespace app\admin\service;
 
 
+use \app\admin\model\AdminGroup as AdminGroupModel;
 use think\Loader;
 use think\Url;
 
-class AdminGroup extends \app\admin\model\AdminGroup {
-
-    //返回结果
-    protected $result=[
-        "code"=>1,
-        "msg"=>"data normal",
-        "data"=>[],
-    ];
+class AdminGroup extends AdminGroupModel {
 
 
     public function add($row){
 
-        $validate = Loader::validate('GroupAdd');
-        if(!$validate->check($row)){
+        $validate = Loader::validate('Group');
+        if(!$validate->scene("add")->check($row)){
             $this->result["code"]=0;
             $this->result["msg"]=$validate->getError();
             unset($validate);
@@ -51,8 +45,8 @@ class AdminGroup extends \app\admin\model\AdminGroup {
 
     public function edit($row){
 
-        $validate = Loader::validate('GroupEdit');
-        if(!$validate->check($row)){
+        $validate = Loader::validate('Group');
+        if(!$validate->scene("edit")->check($row)){
             $this->result["code"]=0;
             $this->result["msg"]=$validate->getError();
             unset($validate);
@@ -78,7 +72,7 @@ class AdminGroup extends \app\admin\model\AdminGroup {
             $this->result["code"]=0;
             $this->result["msg"]="修改失败";
         }else{
-            $this->result=$this->getById($id);
+//            $this->result=$this->getById($id);
             $this->result["msg"]="修改成功";
         }
         return $this->result;
@@ -86,8 +80,8 @@ class AdminGroup extends \app\admin\model\AdminGroup {
 
     public function editStatus($row){
 
-        $validate = Loader::validate('EditStatus');
-        if(!$validate->check($row)){
+        $validate = Loader::validate('Group');
+        if(!$validate->scene("edit_status")->check($row)){
             $this->result["code"]=0;
             $this->result["msg"]=$validate->getError();
             unset($validate);
@@ -101,7 +95,7 @@ class AdminGroup extends \app\admin\model\AdminGroup {
             $this->result["msg"]="数据不存在，修改失败";
             return $this->result;
         }
-        $res=$data->allowField(["status"])->save($row);
+        $res=$data->allowField(["status","update_time"])->save($row);
         if(empty($res)){
             $this->result["code"]=0;
             $this->result["msg"]="修改失败";
@@ -152,11 +146,14 @@ class AdminGroup extends \app\admin\model\AdminGroup {
         $where=[];
         $order="id desc";
         if(isset($row["keyword"])) $where["name"]=["like","%{$row["keyword"]}%"];
-        if(isset($row["status"])) $where["status"]=$row["status"];
+        array_map(function ($value) use (&$where,$row){
+            if(isset($row[$value])) $where[$value]=$row[$value];
+        },
+            ["name","status"]
+        );
         if(isset($row["sort"])){
             if(!empty($row["sort"])){
                 if($row["sort"]=="status_name") $row["sort"]="status";
-                if(!isset($row["order"])) $row["order"]="desc";
                 $order="{$row["sort"]} {$row["order"]}";
             }
         }

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 100122
 File Encoding         : 65001
 
-Date: 2017-08-01 23:28:07
+Date: 2017-10-15 14:22:02
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -43,7 +43,7 @@ CREATE TABLE `tp5_admin` (
 -- ----------------------------
 -- Records of tp5_admin
 -- ----------------------------
-INSERT INTO `tp5_admin` VALUES ('1', '0', 'sky001', '系统管理员', null, null, 'MDAwMDAwMDAwMDU1NzQ4NTJiYjU2MTlmMjlza3kxMjM', '1', '1501515557', '127.0.0.1', '', '1500016980', '1501515557', '56ac1f51e9048a27d9a30f9d74f339b2');
+INSERT INTO `tp5_admin` VALUES ('1', '0', 'admin', '系统管理员', null, null, 'MDAwMDAwMDAwMGZjN2VkZDk3MWUzYmFmMmUxMTExMTE', '1', '1508047925', '127.0.0.1', '', '1500016980', '1508048062', 'a30189e6bfb02abf90657b43dced03a9');
 
 -- ----------------------------
 -- Table structure for tp5_admin_group
@@ -57,11 +57,12 @@ CREATE TABLE `tp5_admin_group` (
   `create_time` int(11) DEFAULT NULL COMMENT '创建时间',
   `update_time` int(11) DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='新后台用户组表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='新后台用户组表';
 
 -- ----------------------------
 -- Records of tp5_admin_group
 -- ----------------------------
+INSERT INTO `tp5_admin_group` VALUES ('1', '管理员', '2,17,18,19,26,27,28,29,3,5,8,9,10,30,6,11,31,32,33,4,7,14,15,16,35,37,38,39,40,23,24,25', '1', '1503642097', '1508048462');
 
 -- ----------------------------
 -- Table structure for tp5_behavior_log
@@ -83,17 +84,11 @@ CREATE TABLE `tp5_behavior_log` (
   `create_time` int(11) DEFAULT NULL COMMENT '创建时间',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='后台用户行为记录';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='后台用户行为记录';
 
 -- ----------------------------
 -- Records of tp5_behavior_log
 -- ----------------------------
-INSERT INTO `tp5_behavior_log` VALUES ('1', '修改菜单', 'admin', 'Menus', 'edit', 'http://admin.tp5.com/menus/edit.html', 'post', 'a:10:{s:5:\"title\";s:18:\"修改个人信息\";s:3:\"pid\";s:1:\"2\";s:6:\"module\";s:5:\"admin\";s:10:\"controller\";s:7:\"Account\";s:6:\"action\";s:6:\"myinfo\";s:4:\"icon\";N;s:4:\"sort\";s:1:\"1\";s:4:\"type\";s:1:\"1\";s:6:\"status\";s:1:\"2\";s:2:\"id\";s:2:\"29\";}', 'a:3:{s:4:\"code\";i:1;s:3:\"msg\";s:11:\"data normal\";s:4:\"data\";a:0:{}}', '127.0.0.1', '', '1', '1501601101', null);
-INSERT INTO `tp5_behavior_log` VALUES ('2', '修改菜单', 'admin', 'Menus', 'edit', 'http://admin.tp5.com/menus/edit.html', 'post', 'a:10:{s:5:\"title\";s:6:\"设置\";s:3:\"pid\";s:1:\"2\";s:6:\"module\";s:5:\"admin\";s:10:\"controller\";s:7:\"Account\";s:6:\"action\";s:7:\"setting\";s:4:\"icon\";N;s:4:\"sort\";s:1:\"1\";s:4:\"type\";s:1:\"1\";s:6:\"status\";s:1:\"2\";s:2:\"id\";s:2:\"28\";}', 'a:3:{s:4:\"code\";i:1;s:3:\"msg\";s:11:\"data normal\";s:4:\"data\";a:0:{}}', '127.0.0.1', '', '1', '1501601109', null);
-INSERT INTO `tp5_behavior_log` VALUES ('3', '修改菜单', 'admin', 'Menus', 'edit', 'http://admin.tp5.com/menus/edit.html', 'post', 'a:10:{s:5:\"title\";s:12:\"解除锁屏\";s:3:\"pid\";s:1:\"2\";s:6:\"module\";s:5:\"admin\";s:10:\"controller\";s:7:\"Account\";s:6:\"action\";s:6:\"unlock\";s:4:\"icon\";N;s:4:\"sort\";s:1:\"1\";s:4:\"type\";s:1:\"1\";s:6:\"status\";s:1:\"2\";s:2:\"id\";s:2:\"27\";}', 'a:3:{s:4:\"code\";i:1;s:3:\"msg\";s:11:\"data normal\";s:4:\"data\";a:0:{}}', '127.0.0.1', '', '1', '1501601117', null);
-INSERT INTO `tp5_behavior_log` VALUES ('4', '修改菜单', 'admin', 'Menus', 'edit', 'http://admin.tp5.com/menus/edit.html', 'post', 'a:10:{s:5:\"title\";s:6:\"锁屏\";s:3:\"pid\";s:1:\"2\";s:6:\"module\";s:5:\"admin\";s:10:\"controller\";s:7:\"Account\";s:6:\"action\";s:4:\"lock\";s:4:\"icon\";N;s:4:\"sort\";s:1:\"1\";s:4:\"type\";s:1:\"1\";s:6:\"status\";s:1:\"2\";s:2:\"id\";s:2:\"26\";}', 'a:3:{s:4:\"code\";i:1;s:3:\"msg\";s:11:\"data normal\";s:4:\"data\";a:0:{}}', '127.0.0.1', '', '1', '1501601124', null);
-INSERT INTO `tp5_behavior_log` VALUES ('5', '修改菜单', 'admin', 'Menus', 'edit', 'http://admin.tp5.com/menus/edit.html', 'post', 'a:10:{s:5:\"title\";s:6:\"退出\";s:3:\"pid\";s:1:\"2\";s:6:\"module\";s:5:\"admin\";s:10:\"controller\";s:7:\"Account\";s:6:\"action\";s:6:\"logout\";s:4:\"icon\";N;s:4:\"sort\";s:1:\"1\";s:4:\"type\";s:1:\"2\";s:6:\"status\";s:1:\"2\";s:2:\"id\";s:2:\"13\";}', 'a:3:{s:4:\"code\";i:1;s:3:\"msg\";s:11:\"data normal\";s:4:\"data\";a:0:{}}', '127.0.0.1', '', '1', '1501601161', null);
-INSERT INTO `tp5_behavior_log` VALUES ('6', '修改菜单', 'admin', 'Menus', 'edit', 'http://admin.tp5.com/menus/edit.html', 'post', 'a:10:{s:5:\"title\";s:6:\"登录\";s:3:\"pid\";s:1:\"2\";s:6:\"module\";s:5:\"admin\";s:10:\"controller\";s:7:\"Account\";s:6:\"action\";s:5:\"login\";s:4:\"icon\";N;s:4:\"sort\";s:1:\"1\";s:4:\"type\";s:1:\"2\";s:6:\"status\";s:1:\"2\";s:2:\"id\";s:2:\"12\";}', 'a:3:{s:4:\"code\";i:1;s:3:\"msg\";s:11:\"data normal\";s:4:\"data\";a:0:{}}', '127.0.0.1', '', '1', '1501601177', null);
 
 -- ----------------------------
 -- Table structure for tp5_login_log
@@ -132,7 +127,8 @@ CREATE TABLE `tp5_menu` (
   `create_time` int(11) DEFAULT NULL COMMENT '创建时间',
   `update_time` int(11) DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uni_tp5_menu_module_controller_action` (`module`,`controller`,`action`) USING BTREE
+  UNIQUE KEY `uni_tp5_menu_module_controller_action` (`module`,`controller`,`action`) USING BTREE,
+  UNIQUE KEY `uni_tp5_menu_title` (`title`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8 COMMENT='新后台菜单表（只支持两级目录）';
 
 -- ----------------------------
@@ -156,11 +152,11 @@ INSERT INTO `tp5_menu` VALUES ('15', '删除菜单', 'admin', 'Menus', 'del', ''
 INSERT INTO `tp5_menu` VALUES ('16', '修改菜单', 'admin', 'Menus', 'edit', '', '1', '1', '2', '7', '1500536434', '1500620314');
 INSERT INTO `tp5_menu` VALUES ('17', '首页', 'admin', 'Index', 'index', null, '1', '1', '2', '2', '1500624582', '1501424466');
 INSERT INTO `tp5_menu` VALUES ('18', '欢迎页', 'admin', 'Index', 'main', null, '1', '1', '2', '2', '1500624635', '1501421895');
-INSERT INTO `tp5_menu` VALUES ('19', '获取菜单信息', 'admin', 'Datas', 'ajaxMenu', '', '1', '1', '2', '7', '1500624833', '1501052677');
+INSERT INTO `tp5_menu` VALUES ('19', '获取菜单信息', 'admin', 'Datas', 'ajaxMenu', '', '1', '1', '2', '2', '1500624833', '1504777612');
 INSERT INTO `tp5_menu` VALUES ('20', '清除缓存', 'admin', 'Index', 'clearCached', null, '1', '2', '2', '2', '1501051129', '1501053098');
-INSERT INTO `tp5_menu` VALUES ('23', '日志管理', 'admin', 'Log', 'default', 'fa-file-text-o', '1', '1', '1', '0', '1501515781', '1501516531');
-INSERT INTO `tp5_menu` VALUES ('24', '登录日志', 'admin', 'Log', 'getLogin', null, '1', '1', '1', '23', '1501515818', '1501515864');
-INSERT INTO `tp5_menu` VALUES ('25', '行为日志', 'admin', 'Log', 'getBehavior', null, '1', '1', '1', '23', '1501515842', '1501515867');
+INSERT INTO `tp5_menu` VALUES ('23', '日志管理', 'admin', 'Log', 'default', 'fa-file-text', '1', '1', '1', '0', '1501515781', '1504165485');
+INSERT INTO `tp5_menu` VALUES ('24', '登录日志', 'admin', 'Log', 'getLogin', 'fa-file-text-o', '1', '1', '1', '23', '1501515818', '1504165493');
+INSERT INTO `tp5_menu` VALUES ('25', '行为日志', 'admin', 'Log', 'getBehavior', 'fa-file-text-o', '1', '1', '1', '23', '1501515842', '1504165500');
 INSERT INTO `tp5_menu` VALUES ('26', '锁屏', 'admin', 'Account', 'lock', null, '1', '1', '2', '2', '1500536208', '1501601124');
 INSERT INTO `tp5_menu` VALUES ('27', '解除锁屏', 'admin', 'Account', 'unlock', null, '1', '1', '2', '2', '1500536208', '1501601117');
 INSERT INTO `tp5_menu` VALUES ('28', '设置', 'admin', 'Account', 'setting', null, '1', '1', '2', '2', '1500536208', '1501601109');

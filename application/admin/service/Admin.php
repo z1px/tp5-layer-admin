@@ -9,35 +9,29 @@
 namespace app\admin\service;
 
 
+use \app\admin\model\Admin as AdminModel;
 use think\Cookie;
 use think\Loader;
 use think\Url;
 
-class Admin extends \app\admin\model\Admin {
-
-    //返回结果
-    protected $result=[
-        "code"=>1,
-        "msg"=>"data normal",
-        "data"=>[],
-    ];
+class Admin extends AdminModel {
 
     public function editMyInfo($row){
         $row=params_format($row,["password"]);
         $row["id"]=Cookie::get("login_id");
-        $validate = Loader::validate('AdminEdit');
-        if(!$validate->check($row)){
+        $validate = Loader::validate('Admin');
+        if(!$validate->scene("edit")->check($row)){
             $this->result["code"]=0;
             $this->result["msg"]=$validate->getError();
             unset($validate);
             return $this->result;
         }
-        if(preg_phone($row["username"])){
+        if(check_phone($row["username"])){
             $this->result["code"]=0;
             $this->result["msg"]="用户名不能是手机号";
             return $this->result;
         }
-        if(preg_email($row["username"])){
+        if(check_email($row["username"])){
             $this->result["code"]=0;
             $this->result["msg"]="用户名不能是邮箱号";
             return $this->result;
@@ -55,7 +49,7 @@ class Admin extends \app\admin\model\Admin {
             $this->result["code"]=0;
             $this->result["msg"]="修改失败";
         }else{
-            $this->result=$this->getById($id);
+//            $this->result=$this->getById($id);
             $this->result["msg"]="修改成功";
         }
         return $this->result;
@@ -64,19 +58,19 @@ class Admin extends \app\admin\model\Admin {
 
     public function add($row){
         $row=params_format($row,["password"]);
-        $validate = Loader::validate('AdminAdd');
-        if(!$validate->check($row)){
+        $validate = Loader::validate('Admin');
+        if(!$validate->scene("add")->check($row)){
             $this->result["code"]=0;
             $this->result["msg"]=$validate->getError();
             unset($validate);
             return $this->result;
         }
-        if(preg_phone($row["username"])){
+        if(check_phone($row["username"])){
             $this->result["code"]=0;
             $this->result["msg"]="用户名不能是手机号";
             return $this->result;
         }
-        if(preg_email($row["username"])){
+        if(check_email($row["username"])){
             $this->result["code"]=0;
             $this->result["msg"]="用户名不能是邮箱号";
             return $this->result;
@@ -94,19 +88,19 @@ class Admin extends \app\admin\model\Admin {
 
     public function edit($row){
         $row=params_format($row,["password"]);
-        $validate = Loader::validate('AdminEdit');
-        if(!$validate->check($row)){
+        $validate = Loader::validate('Admin');
+        if(!$validate->scene("edit")->check($row)){
             $this->result["code"]=0;
             $this->result["msg"]=$validate->getError();
             unset($validate);
             return $this->result;
         }
-        if(preg_phone($row["username"])){
+        if(check_phone($row["username"])){
             $this->result["code"]=0;
             $this->result["msg"]="用户名不能是手机号";
             return $this->result;
         }
-        if(preg_email($row["username"])){
+        if(check_email($row["username"])){
             $this->result["code"]=0;
             $this->result["msg"]="用户名不能是邮箱号";
             return $this->result;
@@ -132,7 +126,7 @@ class Admin extends \app\admin\model\Admin {
     }
 
     public function getById($id){
-        $data=$this->field("id,group_id,username,true_name,mobile,email,status,create_time,last_login_time")->find($id);
+        $data=$this->field("id,group_id,username,true_name,mobile,email,img,status,create_time,last_login_time")->find($id);
         if(empty($data)){
             $this->result["code"]=0;
             $this->result["msg"]="用户不存在";
@@ -146,7 +140,7 @@ class Admin extends \app\admin\model\Admin {
     }
 
     public function del($id){
-        $data=$this->field("id,group_id,username,true_name,mobile,email,status")->find($id);
+        $data=$this->field("id,group_id,username,true_name,mobile,email,img,status")->find($id);
         if(empty($data)){
             $this->result["code"]=0;
             $this->result["msg"]="用户不存在";
@@ -171,8 +165,8 @@ class Admin extends \app\admin\model\Admin {
 
     public function editStatus($row){
 
-        $validate = Loader::validate('EditStatus');
-        if(!$validate->check($row)){
+        $validate = Loader::validate('Admin');
+        if(!$validate->scene("edit_status")->check($row)){
             $this->result["code"]=0;
             $this->result["msg"]=$validate->getError();
             unset($validate);
@@ -191,7 +185,7 @@ class Admin extends \app\admin\model\Admin {
             $this->result["msg"]="数据不存在，修改失败";
             return $this->result;
         }
-        $res=$data->allowField(["status"])->save($row);
+        $res=$data->allowField(["status","update_time"])->save($row);
         if(empty($res)){
             $this->result["code"]=0;
             $this->result["msg"]="修改失败";
@@ -209,15 +203,19 @@ class Admin extends \app\admin\model\Admin {
         $where=[];
         $order="id desc";
         if(isset($row["keyword"])) $where["username|true_name|mobile|email"]=["like","%{$row["keyword"]}%"];
-        if(isset($row["status"])) $where["status"]=$row["status"];
+        array_map(function ($value) use (&$where,$row){
+                if(isset($row[$value])) $where[$value]=$row[$value];
+            },
+            ["group_id","username","mobile","email","status"]
+        );
         if(isset($row["sort"])){
             if(!empty($row["sort"])){
                 if($row["sort"]=="status_name") $row["sort"]="status";
-                if(!isset($row["order"])) $row["order"]="desc";
                 $order="{$row["sort"]} {$row["order"]}";
             }
         }
-        $list=$this->field("id,id copy_id,group_id,username,true_name,mobile,email,status,create_time,last_login_time,ip,area")->where($where)->page($row["pageIndex"],$row["pageSize"])->order($order)->select();
+        $list=$this->field("id,id copy_id,group_id,username,true_name,mobile,email,img,status,create_time,last_login_time,ip,area")->where($where)->page($row["pageIndex"],$row["pageSize"])->order($order)->select();
+        $this->result["where"]=$where;
         $this->result["rel"]=true;
         $this->result["count"]=$this->where($where)->Count();
         unset($row,$where);
@@ -235,6 +233,12 @@ class Admin extends \app\admin\model\Admin {
         $this->result["list"]=$list;
         unset($list);
         return $this->result;
+    }
+
+
+    public function getAll(){
+        $list=$this->order("id asc")->column("group_id,username,true_name,email,mobile,status","id");
+        return array_values($list);
     }
 
 }

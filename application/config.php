@@ -41,7 +41,9 @@ return [
     // 默认时区
     'default_timezone'       => 'PRC',
     // 是否开启多语言
-    'lang_switch_on'         => false,
+    'lang_switch_on'         => true,
+    // 支持的语言列表
+    'lang_list'               => ['zh-cn','en-us'],
     // 默认全局过滤方法 用逗号分隔多个
     'default_filter'         => '',
     // 默认语言
@@ -58,7 +60,7 @@ return [
     // 默认模块名
     'default_module'         => 'index',
     // 禁止访问模块
-    'deny_module_list'       => ['common'],
+    'deny_module_list'       => ['common','extra'],
     // 默认控制器名
     'default_controller'     => 'Index',
     // 默认操作名
@@ -167,6 +169,11 @@ return [
     'show_error_msg'         => false,
     // 异常处理handle类 留空使用 \think\exception\Handle
     'exception_handle'       => '',
+//    'http_exception_template'    =>  [
+//        // 定义404错误的重定向页面地址
+//        404 =>  APP_PATH.'common'.DS.'tpl'.DS.'404.html',
+//        // 还可以定义其它的HTTP status
+//    ],
 
     // +----------------------------------------------------------------------
     // | 日志设置

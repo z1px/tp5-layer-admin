@@ -12,6 +12,7 @@
         <div class="layui-input-block">
             <select name="pid" lay-verify="required" lay-search="">
                 <option value="">请选择上级菜单</option>
+                <option value="">请选择上级菜单</option>
                 <option value="0" {eq name="data.pid" value="0"}selected{/eq}>顶级菜单</option>
                 {volist name="menu" id="vo"}
                 <option value="{$vo.id}" {eq name="data.pid" value="$vo.id"}selected{/eq} {eq name="data.id" value="$vo.id"}disabled{/eq} >{$vo.title}</option>
@@ -52,16 +53,17 @@
     <div class="layui-form-item">
         <label class="layui-form-label">权限类型</label>
         <div class="layui-input-block">
-            <input type="radio" name="type" value="1" title="权限控制" {eq name="data.type" value="1"}checked{/eq}>
-            <input type="radio" name="type" value="2" title="权限白名单" {eq name="data.type" value="2"}checked{/eq}>
-            <!--<input type="radio" name="type" value="3" title="权限黑名单" {eq name="data.type" value="3"}checked{/eq}>-->
+            {volist name="list_type" id="vo"}
+            <input type="radio" name="type" value="{$key}" title="{$vo}" {eq name="data.type" value="$key"}checked{/eq}>
+            {/volist}
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">菜单状态</label>
         <div class="layui-input-block">
-            <input type="radio" name="status" value="1" title="展示" {eq name="data.status" value="1"}checked{/eq}>
-            <input type="radio" name="status" value="2" title="不展示" {eq name="data.status" value="2"}checked{/eq}>
+            {volist name="list_status" id="vo"}
+            <input type="radio" name="status" value="{$key}" title="{$vo}" {eq name="data.status" value="$key"}checked{/eq}>
+            {/volist}
         </div>
     </div>
     <div class="layui-form-item">
@@ -74,27 +76,7 @@
 </form>
 
 <script>
-    layui.use(['form', 'layer'], function() {
-        var form = layui.form(),
-            layer = layui.layer;
-        var layerTips = parent.layerTips === undefined ? (parent.layer === undefined ? layui.layer : parent.layer) : layui.layerTips; //获取父窗口的layer对象
 
-        //自定义验证规则
-        form.verify({
-//            username: [/^[\S]{2,30}$/, '用户组名称必须6到12位，且不能出现空格'],
-        });
+    var edit_url='{:Url("admin/Menus/edit")}';
 
-        //监听提交
-        form.on('submit(form_add)', function(data) {
-            var ind_load=layerTips.load(2);
-            $.post("{:Url('admin/Menus/edit')}",data.field,function (result) {
-                layerTips.close(ind_load);
-                if(result.code==1){
-
-                }
-                layerTips.msg(result.msg);
-            },"json");
-            return false;
-        });
-    });
 </script>

@@ -9,16 +9,9 @@
 namespace app\admin\service;
 
 
-use think\Url;
+use \app\admin\model\LoginLog as LoginLogModel;
 
-class LoginLog extends \app\admin\model\LoginLog {
-
-    //返回结果
-    protected $result=[
-        "code"=>1,
-        "msg"=>"data normal",
-        "data"=>[],
-    ];
+class LoginLog extends LoginLogModel {
 
 
     public function getList($row){
@@ -28,22 +21,26 @@ class LoginLog extends \app\admin\model\LoginLog {
         $where=[];
         $order="id desc";
         if(isset($row["keyword"])) $where["account"]=["like","%{$row["keyword"]}%"];
+        array_map(function ($value) use (&$where,$row){
+            if(isset($row[$value])) $where[$value]=$row[$value];
+        },
+            ["admin_id"]
+        );
         if(isset($row["admin_id"])) $where["admin_id"]=$row["admin_id"];
         if(isset($row["sort"])){
             if(!empty($row["sort"])){
                 if($row["sort"]=="status_name") $row["sort"]="status";
-                if(!isset($row["order"])) $row["order"]="desc";
                 $order="{$row["sort"]} {$row["order"]}";
             }
         }
-        if(!isset($row["begin_date"])) $row["begin_date"]="";
-        if(!isset($row["end_date"])) $row["end_date"]="";
-        if(!empty($row["begin_date"])&&empty($row["end_date"])){
-            $where["create_time"]=["egt",strtotime($row["begin_date"]." 00:00:00")];
-        }elseif(empty($row["begin_date"])&&!empty($row["end_date"])){
-            $where["create_time"]=["elt",strtotime($row["end_date"]." 23:59:59")];
-        }elseif(!empty($row["begin_date"])&&!empty($row["end_date"])){
-            $where["create_time"]=["between",[strtotime($row["begin_date"]." 00:00:00"),strtotime($row["end_date"]." 23:59:59")]];
+        if(!isset($row["begin_time"])) $row["begin_time"]="";
+        if(!isset($row["end_time"])) $row["end_time"]="";
+        if(!empty($row["begin_time"])&&empty($row["end_time"])){
+            $where["create_time"]=["egt",strtotime($row["begin_time"]." 00:00:00")];
+        }elseif(empty($row["begin_time"])&&!empty($row["end_time"])){
+            $where["create_time"]=["elt",strtotime($row["end_time"]." 23:59:59")];
+        }elseif(!empty($row["begin_time"])&&!empty($row["end_time"])){
+            $where["create_time"]=["between",[strtotime($row["begin_time"]." 00:00:00"),strtotime($row["end_time"]." 23:59:59")]];
         }
 
         $list=$this->field("id,id copy_id,admin_id,account,ip,area,create_time")->where($where)->page($row["pageIndex"],$row["pageSize"])->order($order)->select();
@@ -54,8 +51,9 @@ class LoginLog extends \app\admin\model\LoginLog {
             $list=[];
         }else{
             foreach ($list as $key=>$value){
-                $value->account=unserialize($value->account);
-                $value->username=$value->account["username"];
+                if(!empty($value->account)) $value->account=json_decode($value->account,true);
+                $value->username=isset($value->account["username"])?$value->account["username"]:"";
+                if(!empty($value->account)) $value->account="<pre>".var_export($value->account,true)."</pre>";
                 $list[$key]=$value->toArray();
             }
             unset($key,$value);

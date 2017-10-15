@@ -37,7 +37,7 @@ class Group extends Common {
             $this->result=$this->adminGroup->getList($this->params);
             return $this->_result();
         }else{
-            return $this->_fetch();
+            return $this->_fetch(["list_status"=>$this->adminGroup->list_status]);
         }
     }
 
@@ -55,7 +55,7 @@ class Group extends Common {
             }
             return $this->_result($url);
         }else{
-            return $this->_fetch();
+            return $this->_fetch(["list_status"=>$this->adminGroup->list_status]);
         }
     }
 
@@ -80,7 +80,7 @@ class Group extends Common {
         }else{
             $this->result=$this->adminGroup->getById($this->params["id"]);
             if($this->result["code"]==0) return $this->_jump();
-            return $this->_fetch(["data"=>$this->result["data"]]);
+            return $this->_fetch(["data"=>$this->result["data"],"list_status"=>$this->adminGroup->list_status]);
         }
     }
 

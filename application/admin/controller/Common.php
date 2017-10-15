@@ -9,8 +9,10 @@
 namespace app\admin\controller;
 
 
+use app\admin\logic\Login;
 use think\Config;
 use think\Controller;
+use think\Cookie;
 use think\exception\HttpException;
 use think\Request;
 
@@ -47,6 +49,17 @@ class Common extends Controller {
 
         if(empty($this->request)) $this->request=Request::instance();
         if(empty($this->params)) $this->params=params_format($this->request->param());
+
+        if($this->request->isGet()){
+            if(empty($this->account)){
+                $login=new Login();
+                $result=$login->login_check();
+                $this->account=$result["data"];
+                unset($result);
+            }
+        }
+        $this->assign("account",$this->account);
+        $this->assign("luck",Cookie::has("luck"));
 
     }
 
@@ -94,9 +107,9 @@ class Common extends Controller {
         unset($this->params,$this->request);
 
         if($this->result["code"]==1){
-            return $this->success($this->result["msg"],$url,$this->result["data"]);
+            $this->success($this->result["msg"],$url,$this->result["data"]);
         }else{
-            return $this->error($this->result["msg"],$url,$this->result["data"]);
+            $this->error($this->result["msg"],$url,$this->result["data"]);
         }
     }
 

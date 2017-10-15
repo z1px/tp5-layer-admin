@@ -6,10 +6,12 @@
 
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="format-detection" content="telephone=no,email=no">
+    <meta name="App-Config" content="fullscreen=yes,useHistoryState=yes,transition=yes">
 
     <!-- head begin -->
     <link rel="stylesheet" href="__ADMIN__/layui/css/layui.css" media="all" />
@@ -28,7 +30,7 @@
         <div class="layui-main">
             <div class="admin-login-box">
                 <a class="logo" style="left: 0;" href="/">
-                    <span style="font-size: 22px;">shuowan.com</span>
+                    <span style="font-size: 22px;">xxx.com</span>
                 </a>
                 <div class="admin-side-toggle">
                     <i class="fa fa-bars" aria-hidden="true"></i>
@@ -38,19 +40,19 @@
                 </div>
             </div>
             <ul class="layui-nav admin-header-item">
-                <li class="layui-nav-item" id="clearCached">
+                <li class="layui-nav-item" id="clearCached" data-url='{:Url("admin/Index/clearCached")}'>
                     <a href="javascript:;">清除缓存</a>
                 </li>
                 <li class="layui-nav-item">
                     <a href="javascript:;" class="admin-header-user">
-                        <img src="__ADMIN_IMAGE__/0.jpg" />
-                        <span>{notempty name="Think.cookie.login_name"}{$Think.cookie.login_name}{/notempty}</span>
+                        <img src="{empty name="account.img"}__ADMIN_IMAGE__/0.jpg{else/}{$account.img}{/empty}" />
+                        <span>{notempty name="account.username"}{$account.username}{/notempty}</span>
                     </a>
                     <dl class="layui-nav-child">
-                        <dd id="myinfo">
+                        <dd id="myinfo" data-url='{:Url("admin/Account/myinfo")}'>
                             <a href="javascript:;"><i class="fa fa-user-circle" aria-hidden="true"></i> 个人信息</a>
                         </dd>
-                        <!--<dd>-->
+                        <!--<dd id="setting" data-url='{:Url("admin/Index/setting")}'>-->
                             <!--<a href="{:Url('admin/Account/setting')}"><i class="fa fa-gear" aria-hidden="true"></i> 设置</a>-->
                         <!--</dd>-->
                         <dd id="lock">
@@ -88,7 +90,7 @@
                     <cite>控制面板</cite>
                 </li>
             </ul>
-            <div class="layui-tab-content" style="min-height: 150px; padding: 5px 0 0 0;">
+            <div class="layui-tab-content" style="min-height: 150px; padding: 5px 0 0 0;-webkit-overflow-scrolling: touch;overflow:auto;">
                 <div class="layui-tab-item layui-show">
                     <iframe src="/index/main.html"></iframe>
                 </div>
@@ -101,7 +103,7 @@
     <div class="layui-footer footer footer-demo" id="admin-footer">
         <div class="layui-main">
             <p>2016 &copy;
-                <a href="http://www.shuowan.com/">shuowan.com</a>
+                <a href="http://www.xxx.com/">xxx.com</a>
             </p>
         </div>
     </div>
@@ -116,56 +118,10 @@
 
 <!-- foot begin -->
 <script type="text/javascript" src="__ADMIN_JS__/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="__ADMIN_JS__/jquery.md5.js"></script>
 <script type="text/javascript" src="__ADMIN__/layui/layui.js"></script>
 <script type="text/javascript" src="__ADMIN_JS__/index.js"></script>
-<script type="text/javascript" src="__ADMIN_JS__/layui.js"></script>
 <!-- foot end -->
-
-<script type="text/javascript">
-    layui.config({
-        base: '/static/admin/layui/modules/',
-        version: new Date().getTime()
-    }).use([ 'layer', 'tab', 'navbar'], function () {
-        var layer = layui.layer,
-            tab = layui.tab(),
-            navbar = layui.navbar();
-
-        $('#myinfo').on('click', function () {
-
-//            tab.tabAdd({
-//                href: '{:Url("admin/Account/myinfo")}',
-//                icon: 'fa-user-circle',
-//                title: '个人信息'
-//            });
-
-            layer.open({
-                type: 2,//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
-                title: '个人信息',
-                maxmin: true, //最大最小化
-                area : ['465px','500px'],//宽高
-                content: '{:Url("admin/Account/myinfo")}'
-            });
-
-        });
-
-        $('#setting').on('click', function () {
-            tab.tabAdd({
-                href: '{:Url("admin/Index/setting")}',
-                icon: 'fa-gear',
-                title: '设置'
-            });
-        });
-
-        //清除缓存
-        $('#clearCached').on('click', function () {
-            navbar.cleanCached();
-            $.get('{:Url("admin/Index/clearCached")}');
-            layer.alert('清除完成!', { icon: 1, title: '系统提示' }, function () {
-                location.reload();//刷新
-            });
-        });
-    })
-</script>
 
 <!-- luck begin -->
 {include file="public:luck" /}

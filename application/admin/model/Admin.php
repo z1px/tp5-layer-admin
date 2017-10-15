@@ -21,6 +21,11 @@ class Admin extends Model {
     protected $table = 'tp5_admin';
     // 设置主键
     protected $pk = 'id';
+    // 类型转换
+    protected $type = [
+        'create_time'  =>  'timestamp:Y-m-d H:i:s',
+        'update_time'  =>  'timestamp:Y-m-d H:i:s',
+    ];
 
     // 关闭自动写入create_time字段
 //    protected $createTime = false;
@@ -34,6 +39,18 @@ class Admin extends Model {
     //自动完成包含更新操作
     protected $update = ["ip","area"];
 
+    //返回结果
+    protected $result=[
+        "code"=>1,
+        "msg"=>"data normal",
+        "data"=>[],
+    ];
+
+    //状态
+    public $list_status=[
+        1=>"正常",
+        2=>"禁用",
+    ];
 
     /**
      * 修改器
@@ -78,12 +95,7 @@ class Admin extends Model {
     }
     protected function getStatusNameAttr($value,$data) {
         if(!isset($data["status"])) return "未知状态";
-        switch ($data["status"]){
-            case 1:$value="正常";break;
-            case 2:$value="禁用";break;
-            default:$value="未知状态";
-        }
-        return $value;
+        return isset($this->list_status[$data["status"]])?$this->list_status[$data["status"]]:"未知状态";
     }
 
 }

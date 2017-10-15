@@ -4,13 +4,13 @@ var tab;
 layui.config({
     base: '/static/admin/layui/modules/',
     version: new Date().getTime()
-}).use(['element', 'layer', 'navbar', 'tab'], function () {
-    var element = layui.element(),
-        layer = layui.layer,
-        navbar = layui.navbar();
-    tab = layui.tab({
-        elem: '.admin-nav-card' //设置选项卡容器
-        ,
+}).use([ 'layer', 'navbar', 'tab'], function () {
+
+    layerTips = parent.layer === undefined ? layui.layer : parent.layer; //获取父窗口的layer对象
+
+    var navbar = layui.navbar();
+    var tab = layui.tab({
+        elem: '.admin-nav-card', //设置选项卡容器
         //maxSetting: {
         //	max: 5,
         //	tipMsg: '只能开5个哇，不能再开了。真的。'
@@ -30,17 +30,17 @@ layui.config({
             //obj.id     -- id
             //obj.tabId  -- lay-id
             if (obj.title === 'BTable') {
-                layer.confirm('确定要关闭' + obj.title + '吗?', { icon: 3, title: '系统提示' }, function (index) {
+                layerTips.confirm('确定要关闭' + obj.title + '吗?', { icon: 3, title: '系统提示' }, function (index) {
                     //因为confirm是非阻塞的，所以这里关闭当前tab需要调用一下deleteTab方法
                     tab.deleteTab(obj.tabId);
-                    layer.close(index);
+                    layerTips.close(index);
                 });
                 //返回true会直接关闭当前tab
                 return false;
             }else if(obj.title==='表单'){
-                layer.confirm('未保存的数据可能会丢失哦，确定要关闭吗?', { icon: 3, title: '系统提示' }, function (index) {
+                layerTips.confirm('未保存的数据可能会丢失哦，确定要关闭吗?', { icon: 3, title: '系统提示' }, function (index) {
                     tab.deleteTab(obj.tabId);
-                    layer.close(index);
+                    layerTips.close(index);
                 });
                 return false;
             }
@@ -113,7 +113,7 @@ layui.config({
         else if (elem.msRequestFullscreen) {
             elem.msRequestFullscreen();
         }
-        layer.msg('按Esc即可退出全屏');
+        layerTips.msg('按Esc即可退出全屏');
     });
 
     //手机设备的简单适配
@@ -124,6 +124,39 @@ layui.config({
     });
     shadeMobile.on('click', function () {
         $('body').removeClass('site-mobile');
+    });
+
+    $('#myinfo').on('click', function () {
+        var url=$(this).data("url");
+        layerTips.open({
+            type: 2,//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
+            title: '个人信息',
+            maxmin: true, //最大最小化
+            area : ['480px','500px'],//宽高
+            content: url,
+            resizing:function(layero){ //拉伸时修改高度
+                layero.find("iframe").height(layero.height()-layero.find(".layui-layer-title").height()-1)
+            }
+        });
+
+    });
+
+    $('#setting').on('click', function () {
+        var url=$(this).data("url");
+        tab.tabAdd({
+            href: url,
+            icon: 'fa-gear',
+            title: '设置'
+        });
+    });
+
+    //清除缓存
+    $('#clearCached').on('click', function () {
+        navbar.cleanCached();
+        $.get();
+        layerTips.alert('清除完成!', { icon: 1, title: '系统提示' }, function () {
+            location.reload();//刷新
+        });
     });
 });
 

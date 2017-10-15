@@ -23,8 +23,7 @@
 
 <script>
     layui.use(['layer'], function() {
-        var layer = layui.layer;
-        var layerTips = parent.layerTips === undefined ? (parent.layer === undefined ? layui.layer : parent.layer) : layui.layerTips; //获取父窗口的layer对象
+        var layerTips = parent.layer === undefined ? layui.layer : parent.layer; //获取父窗口的layer对象
 
         layerTips.alert('{$msg}', {
             title: '信息提示',//提示窗标题
@@ -36,7 +35,7 @@
             {if condition="$code eq 0 && $data eq 'auth'"}
                 layerTips.closeAll();
             {else /}
-                location.href='{$url}';
+                window.top.location.href='{$url}';
             {/if}
         });
     });

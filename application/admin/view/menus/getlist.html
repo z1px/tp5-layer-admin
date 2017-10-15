@@ -1,0 +1,107 @@
+{layout name="layout:table" /}
+
+<!-- main begin -->
+<blockquote class="layui-elem-quote" style="overflow:visible;">
+    <a href="javascript:;" class="layui-btn layui-btn-warm layui-btn-small" id="menuTree">
+        <i class="layui-icon">&#xe62e;</i> 菜单树
+    </a>
+    <a href="javascript:;" class="layui-btn layui-btn-small" id="edit">
+        <i class="layui-icon">&#xe608;</i> 添加信息
+    </a>
+    <form class="layui-form" style="float:right;">
+        <div class="layui-form-item" style="margin:0;">
+            <label class="layui-form-label">菜单状态</label>
+            <div class="layui-input-inline">
+                <select name="status" lay-filter="">
+                    <option value="">请选择菜单状态</option>
+                    <option value="">请选择菜单状态</option>
+                    {volist name="list_status" id="vo"}
+                    <option value="{$key}">{$vo}</option>
+                    {/volist}
+                </select>
+            </div>
+            <label class="layui-form-label">菜单权限</label>
+            <div class="layui-input-inline">
+                <select name="type" lay-filter="">
+                    <option value="">请选择菜单权限</option>
+                    <option value="">请选择菜单权限</option>
+                    {volist name="list_type" id="vo"}
+                    <option value="{$key}">{$vo}</option>
+                    {/volist}
+                </select>
+            </div>
+            <label class="layui-form-label">关键字</label>
+            <div class="layui-input-inline">
+                <input type="text" name="keyword" placeholder="支持模糊查询.." autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux" style="padding:0;">
+                <button lay-filter="search" class="layui-btn" lay-submit><i class="fa fa-search" aria-hidden="true"></i> 查询</button>
+            </div>
+        </div>
+    </form>
+    <div class="layui-clear"></div>
+</blockquote>
+
+<div class="layui-form">
+    <table class="layui-table admin-table">
+        <thead>
+        <tr>
+            <th>编号</th>
+            <th>菜单名</th>
+            <th>上级菜单</th>
+            <th>地址</th>
+            <th>图标</th>
+            <th>排序</th>
+            <th>权限类型</th>
+            <th>菜单状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="content">
+        </tbody>
+    </table>
+</div>
+
+<div class="admin-table-page">
+    <div id="paged" class="page">
+    </div>
+</div>
+<!-- main end -->
+
+<!-- 模板 begin -->
+<script type="text/html" id="tpl">
+    {{# if(d.list.length>0 && d.list!=undefined){ }}
+        {{# layui.each(d.list, function(index, item){ }}
+        <tr>
+            <td data-label="编号">{{ item.id }}</td>
+            <td data-label="菜单名">{{ item.title }}</td>
+            <td data-label="上级菜单">{{ item.ptitle }}</td>
+            <td data-label="地址"><a href="javascript:void(0);" onclick="openUrl('{{ item.url }}','{{ item.title }}',area);">{{ item.url }}</a></td>
+            <td data-label="图标"><i class="fa {{ item.icon }}"></i></td>
+            <td data-label="排序">{{ item.sort }}</td>
+            <td data-label="权限类型">{{ item.type_name }}</td>
+            <td data-label="菜单状态">
+                <input type="checkbox" name="status" lay-skin="switch" lay-text="展示|隐藏" lay-filter="switchStatus" data-id="{{ item.id }}" {{# if(item.status=="1"){ }}checked{{# } }}>
+            </td>
+            <td data-label="操作">
+                <a href="javascript:;" data-id="{{ item.id }}" data-name="{{ item.title }}"  data-url="{{ item.url_edit }}" data-opt="edit" class="layui-btn layui-btn-mini">编辑</a>
+                <a href="javascript:;" {{# if(item.id>2){ }}data-id="{{ item.id }}" data-name="{{ item.title }}" data-url="{{ item.url_del }}" data-opt="del"{{# } }} class="layui-btn layui-btn-danger layui-btn-mini {{# if(item.id<=2){ }}layui-btn-disabled{{# } }}">删除</a>
+            </td>
+        </tr>
+        {{# }); }}
+    {{# }else{ }}
+        <tr><td colspan="9">暂无数据.</td></tr>
+    {{# } }}
+</script>
+<!-- 模板 end -->
+
+<script>
+
+    var area=['470px','600px'];//弹窗大小
+    var content_url='{:Url("admin/Menus/getList")}';//表格内容请求接口
+    var tree_url='{:Url("admin/Menus/getAll")}';//菜单树请求接口
+    var edit_url='{:Url("admin/Menus/add")}';//添加数据请求接口
+    var del_url='{:Url("admin/Menus/del")}';//删除请求接口
+    var switch_url='{:Url("admin/Menus/editStatus")}';//状态切换请求接口
+
+</script>

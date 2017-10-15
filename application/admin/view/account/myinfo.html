@@ -1,5 +1,6 @@
-{layout name="layout:form" /}
+{{extend name="layout:form1" /}
 
+{block name="main"}
 <form class="layui-form layui-form-pane" method="post">
     <div class="layui-form-item">
         <label class="layui-form-label">用户组</label>
@@ -33,6 +34,14 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">用户头像</label>
+        <div class="layui-input-block">
+            <input type="file" name="file" class="layui-upload-file">
+            <input type="hidden" name="img" value="{$data.img}">
+            <img src="{$data.img}" id="img" style="max-height: 120px;max-width: 270px;">
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">密码</label>
         <div class="layui-input-inline">
             <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input" lay-verify="password">
@@ -49,64 +58,38 @@
     <div class="layui-form-item">
         <div class="layui-input-block">
             <input type="hidden" name="id" value="{$data.id}">
-            <button class="layui-btn" lay-submit lay-filter="form_edit">立即提交</button>
+            <button class="layui-btn" lay-submit lay-filter="form_edit_info">立即提交</button>
             <button type="reset" class="layui-btn layui-btn-primary">重置</button>
         </div>
     </div>
 </form>
+{/block}
 
+{block name="foot"}
 <script>
-    layui.use(['form', 'layedit', 'laydate'], function() {
-        var form = layui.form(),
-            layer = layui.layer;
-        var layerTips = parent.layerTips === undefined ? (parent.layer === undefined ? layui.layer : parent.layer) : layui.layerTips; //获取父窗口的layer对象
 
-        //自定义验证规则
-        form.verify({
-            username: [/^[A-Za-z0-9\-\_]{2,20}$/, '用户名只能是2-20位的字母、数字和下划线_及破折号-'],
-            phone:function (value) {
-                if(value){
-                    if(!/^1[34578][0-9]{9}$/.test(value)){
-                        return '手机号格式不正确';
-                    }
-                }
-            },
-            email:function (value) {
-                if(value){
-                    if(!/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(value)){
-                        return '邮箱号格式不正确';
-                    }
-                }
-            },
-            password: function (value) {
-                var pwd=$("input[name=password]").val();
-                if(!$("input[name=id]").val()||($("input[name=id]").length>0&&pwd)){
-                    if(!/^[\S]{6,12}$/.test(value)){
-                        return '密码必须6到12位，且不能出现空格';
-                    }
-                }
+    var upload_img_url='{:Url("admin/Upload/img")}';
 
-            },
-            check_password: function(value) {
-                var pwd=$("input[name=password]").val();
-                if(value!=pwd){
-                    return '两次密码不一致';
-                }
-            },
-        });
+    layui.use(['upload'], function() {
+        var upload = layui.upload;
 
-        //监听提交
-        form.on('submit(form_edit)', function(data) {
-            data.form.submit();
-//            var ind_load=layerTips.load(2);
-//            $.post("{:Url('admin/Account/edit')}",data.field,function (result) {
-//                layerTips.close(ind_load);
-//                if(result.code==1){
-//
-//                }
-//                layerTips.msg(result.msg);
-//            },"json");
-            return false;
+        upload({
+            url: upload_img_url,
+            method: 'post', //上传接口的http类型
+            ext: 'jpg|jpeg|png|gif|bmp',
+            before: function(){
+                ind_load=layerTips.msg('图片上传中...',{icon: 16,shade: 0.01});
+            },
+            success: function(result){
+//                    layerTips.close(ind_load);
+                layerTips.msg(result.msg);
+                if(result.code==0){
+                    $("input[name=img]").val(result.data.src);
+                    $('#img').attr("src",result.data.src);
+                }
+            }
         });
     });
+
 </script>
+{/block}

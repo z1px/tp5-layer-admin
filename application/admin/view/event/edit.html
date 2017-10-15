@@ -1,0 +1,220 @@
+{{extend name="layout:form1" /}
+
+{block name="main"}
+<form class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">CP游戏</label>
+        <div class="layui-input-block">
+            <select name="app" lay-search="">
+                <option value="">请选择CP游戏</option>
+                <option value="">请选择CP游戏</option>
+                {volist name="list_games" id="vo"}
+                <option value="{$vo.gameid}_{$vo.appid}_{$vo.game_name}" {eq name="data.appid" value="$vo.appid"}selected{/eq}>{$vo.gameid}=>{$vo.game_name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">Sdk平台</label>
+        <div class="layui-input-block">
+            <select name="platform_id" lay-search="">
+                <option value="">请选择Sdk平台</option>
+                <option value="">请选择Sdk平台</option>
+                {volist name="list_platform" id="vo"}
+                <option value="{$vo.id}" {eq name="data.platform_id" value="$vo.id"}selected{/eq}>{$vo.id}=>{$vo.company}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">SDK游戏</label>
+        <div class="layui-input-block">
+            <select name="sdk_app" lay-search="">
+                <option value="">请选择SDK平台游戏</option>
+                <option value="">请选择SDK平台游戏</option>
+                {volist name="list_sdk_games" id="vo"}
+                <option value="{$vo.game_id}_{$vo.app_id}_{$vo.game_name}_{$vo.platform_id}_{$vo.gameid}_{$vo.appid}" {eq name="data.app_id" value="$vo.app_id"}selected{/eq}>{$vo.game_id}=>{$vo.game_name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">平台账号</label>
+        <div class="layui-input-inline" style="margin-left: 23px;">
+            <input type="text" name="tmid" value="{$data.tmid}" autocomplete="off" placeholder="请输入平台账号ID" class="layui-input">
+        </div>
+        <div class="layui-input-inline" style="margin-right: 0;">
+            <input type="text" name="tname" value="{$data.tname}" autocomplete="off" placeholder="请输入平台账号" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">说玩账号</label>
+        <div class="layui-input-inline" style="margin-left: 23px;">
+            <input type="text" name="smid" value="{$data.smid}" autocomplete="off" placeholder="请输入说玩账号ID" class="layui-input">
+        </div>
+        <div class="layui-input-inline" style="margin-right: 0;">
+            <input type="text" name="username" value="{$data.username}" autocomplete="off" placeholder="请输入说玩账号" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">事件标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" value="{$data.title}" autocomplete="off" placeholder="请输入事件标题" class="layui-input" lay-verify="required">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">事件简介</label>
+        <div class="layui-input-block">
+            <textarea name="brief" placeholder="请输入事件简介" class="layui-textarea" lay-verify="required">{$data.brief}</textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">事件图片</label>
+        <div class="layui-input-block">
+            <input type="file" name="file" class="layui-upload-file">
+            <input type="hidden" name="img" value="{$data.img}">
+            <img src="{$data.img}" id="img" style="max-height: 120px;max-width: 270px;">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">跳转地址</label>
+        <div class="layui-input-block">
+            <input type="text" name="url" value="{$data.url}" autocomplete="off" placeholder="请输入事件跳转地址" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">主体内容</label>
+        <div class="layui-input-block">
+            <textarea class="layui-textarea layui-hide" name="intro" lay-verify="content" id="editor">{$data.intro}</textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">事件类型</label>
+        <div class="layui-input-block">
+            <select name="type" lay-verify="required" lay-search="">
+                <option value="">请选择事件类型</option>
+                <option value="">请选择事件类型</option>
+                {volist name="list_type" id="vo"}
+                <option value="{$key}" {eq name="data.type" value="$key"}selected{/eq}>{$vo}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">操作类型</label>
+        <div class="layui-input-block">
+            <select name="operate_type" lay-verify="required" lay-search="">
+                <option value="">请选择操作类型</option>
+                <option value="">请选择操作类型</option>
+                {volist name="list_operate_type" id="vo"}
+                <option value="{$key}" {eq name="data.operate_type" value="$key"}selected{/eq}>{$vo}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <select name="status" lay-verify="required" lay-search="">
+                <option value="">请选择状态</option>
+                <option value="">请选择状态</option>
+                {volist name="list_status" id="vo"}
+                <option value="{$key}" {eq name="data.status" value="$key"}selected{/eq}>{$vo}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">事件时间</label>
+        <div class="layui-input-inline">
+            <input type="text" name="begin_time" value="{$data.begin_time}" autocomplete="off" placeholder="请输入开始时间" class="layui-input" lay-verify="required">
+        </div>
+        <div class="layui-input-inline" style="margin-right: 0;">
+            <input type="text" name="end_time" value="{$data.end_time}" autocomplete="off" placeholder="请输入结束时间" class="layui-input" lay-verify="required">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">附加参数1</label>
+        <div class="layui-input-block">
+            <input type="text" name="param1" value="{$data.param1}" autocomplete="off" placeholder="请输入附加参数" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">附加参数2</label>
+        <div class="layui-input-block">
+            <input type="text" name="param2" value="{$data.param2}" autocomplete="off" placeholder="请输入附加参数" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">附加参数3</label>
+        <div class="layui-input-block">
+            <input type="text" name="param3" value="{$data.param3}" autocomplete="off" placeholder="请输入附加参数" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <textarea name="remark" placeholder="请输入备注信息" class="layui-textarea">{$data.remark}</textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="hidden" name="id" value="{$data.id}">
+            <button class="layui-btn" lay-submit lay-filter="form_edit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+{/block}
+
+{block name="foot"}
+<script>
+
+    var edit_url='{:Url("admin/Event/edit")}';
+    var upload_img_url='{:Url("admin/Upload/img")}';
+
+    layui.use(['upload','layedit'], function() {
+        var upload = layui.upload,
+            layedit = layui.layedit;
+
+        //创建一个编辑器
+        layedit.set({
+            height: 120, //设置编辑器高度
+            uploadImage: {
+                url: upload_img_url, //接口url
+                type: 'post' //默认post
+            }
+        });
+        var editIndex = layedit.build('editor',{
+            tool: [
+                'strong', //加粗
+                'italic', //斜体
+                'underline', //下划线
+                'del', //删除线
+                'link', //超链接
+                'unlink', //清除链接
+                'face', //表情
+                'image' //插入图片
+            ]
+        });
+
+        upload({
+            url: upload_img_url,
+            method: 'post', //上传接口的http类型
+            ext: 'jpg|jpeg|png|gif|bmp',
+            before: function(){
+                ind_load=layerTips.msg('图片上传中...',{icon: 16,shade: 0.01});
+            },
+            success: function(result){
+//                    layerTips.close(ind_load);
+                layerTips.msg(result.msg);
+                if(result.code==0){
+                    $("input[name=img]").val(result.data.src);
+                    $('#img').attr("src",result.data.src);
+                }
+            }
+        });
+    });
+
+</script>
+{/block}

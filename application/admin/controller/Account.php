@@ -28,6 +28,7 @@ class Account extends Common {
 
     protected function _before(){
         $this->admin=new Admin();
+        $this->adminGroup=new AdminGroup();
         $this->login=new Login();
     }
 
@@ -88,7 +89,7 @@ class Account extends Common {
         if($this->request->isPost()){
             $this->result=$this->admin->editMyInfo($this->params);
 
-            return $this->_jump(Url::build("admin/Account/myinfo"));
+            return $this->_jump(Url::build("/"));
         }else{
             $this->result=$this->login->login_check();
             if($this->result["code"]==0) return $this->_jump();
@@ -106,7 +107,7 @@ class Account extends Common {
             $this->result=$this->admin->getList($this->params);
             return $this->_result();
         }else{
-            return $this->_fetch();
+            return $this->_fetch(["list_group"=>$this->adminGroup->getAll(),"list_status"=>$this->admin->list_status]);
         }
     }
 
@@ -124,8 +125,7 @@ class Account extends Common {
             }
             return $this->_result($url);
         }else{
-            $this->adminGroup=new AdminGroup();
-            return $this->_fetch(["group"=>$this->adminGroup->getAll()]);
+            return $this->_fetch(["list_group"=>$this->adminGroup->getAll(),"list_status"=>$this->admin->list_status]);
         }
     }
 
@@ -150,8 +150,7 @@ class Account extends Common {
         }else{
             $this->result=$this->admin->getById($this->params["id"]);
             if($this->result["code"]==0) return $this->_jump();
-            $this->adminGroup=new AdminGroup();
-            return $this->_fetch(["data"=>$this->result["data"],"group"=>$this->adminGroup->getAll()]);
+            return $this->_fetch(["data"=>$this->result["data"],"list_group"=>$this->adminGroup->getAll(),"list_status"=>$this->admin->list_status]);
         }
     }
 

@@ -1,48 +1,58 @@
-{layout name="layout:form" /}
+{extend name="layout:form1" /}
 
+{block name="head"}
 <!-- head begin -->
 <link rel="stylesheet" href="__ADMIN__/zTree/css/metroStyle/metroStyle.css" />
 <!-- head end -->
+{/block}
 
-<!-- foot begin -->
-<script type="text/javascript" src="__ADMIN__/zTree/js/jquery.ztree.core.min.js"></script>
-<script type="text/javascript" src="__ADMIN__/zTree/js/jquery.ztree.excheck.min.js"></script>
-<!-- foot end -->
-
+{block name="main"}
 <form class="layui-form">
     <div class="layui-form-item">
         <label class="layui-form-label">用户组名称</label>
         <div class="layui-input-block">
-            <input type="text" name="name" value="{$data.name}" autocomplete="off" placeholder="请输入用户组名称" class="layui-input" lay-verify="required|username">
+            <input type="text" name="name" value="{$data.name}" autocomplete="off" placeholder="请输入用户组名称" class="layui-input" lay-verify="required|name">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">账号状态</label>
         <div class="layui-input-block">
-            <input type="radio" name="status" value="1" title="正常" {eq name='data.status' value='1'}checked{/eq}>
-            <input type="radio" name="status" value="2" title="禁用"{eq name='data.status' value='2'}checked{/eq}>
+            {volist name="list_status" id="vo"}
+            <input type="radio" name="status" value="{$key}" title="{$vo}" {eq name="data.status" value="$key"}checked{/eq}>
+            {/volist}
         </div>
     </div>
     <fieldset class="layui-elem-field">
         <legend>菜单权限设置</legend>
         <div class="layui-field-box">
-            <ul id="menuTree" class="ztree" data-url="{:Url('admin/Menus/menuTree')}" data-gid="{$data.id}"></ul>
+            <ul id="menuTree" class="ztree"></ul>
         </div>
     </fieldset>
     <div class="layui-form-item">
         <div class="layui-input-block">
             <input type="hidden" name="id" value="{$data.id}">
-            <button class="layui-btn" lay-submit lay-filter="form_edit">立即提交</button>
+            <button class="layui-btn" lay-submit lay-filter="form_edit_menu">立即提交</button>
             <button type="reset" class="layui-btn layui-btn-primary">重置</button>
         </div>
     </div>
 </form>
+{/block}
 
+{block name="foot"}
+<!-- foot begin -->
+<script type="text/javascript" src="__ADMIN__/zTree/js/jquery.ztree.core.min.js"></script>
+<script type="text/javascript" src="__ADMIN__/zTree/js/jquery.ztree.excheck.min.js"></script>
+<script type="text/javascript" src="__ADMIN__/zTree/js/jquery.ztree.exedit.min.js"></script>
+<!-- foot end -->
 <script>
-    layui.use(['form','layer'], function() {
-        var form = layui.form(),
-            layer = layui.layer;
-        var layerTips = parent.layerTips === undefined ? (parent.layer === undefined ? layui.layer : parent.layer) : layui.layerTips; //获取父窗口的layer对象
+
+    var edit_url='{:Url("admin/Group/edit")}';
+    var menu_url='{:Url("admin/Menus/menuTree",["group_id"=>$data["id"]])}';
+
+    console.log(menu_url);
+
+    layui.use(['form'], function() {
+        var form = layui.form();
 
         var zTree;
         // zTree 配置项
@@ -68,17 +78,17 @@
             }
         };
 
-        $.post($("#menuTree").data("url"),{group_id:$("#menuTree").data("gid")},function (data) {
+        $.post(menu_url,{},function (data) {
             zTree = $.fn.zTree.init($("#menuTree"), setting, data);
         });
 
         //自定义验证规则
         form.verify({
-            username: [/^[\S]{2,30}$/, '用户组名称必须6到12位，且不能出现空格'],
+            name: [/^[\S]{2,30}$/, '用户组名称必须6到12位，且不能出现空格']
         });
 
         //监听提交
-        form.on('submit(form_edit)', function(data) {
+        form.on('submit(form_edit_menu)', function(data) {
             var ind_load=layerTips.load(2);
 
             var auth_rule_ids=[];
@@ -90,7 +100,7 @@
             checked_ids=null;
             auth_rule_ids=null;
 
-            $.post("{:Url('admin/Group/edit')}",data.field,function (result) {
+            $.post(edit_url,data.field,function (result) {
                 layerTips.close(ind_load);
                 layerTips.msg(result.msg);
                 if(result.code!=1){
@@ -112,3 +122,4 @@
         });
     });
 </script>
+{/block}

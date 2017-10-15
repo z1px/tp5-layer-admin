@@ -74,6 +74,10 @@ var navs = [{
 		"title": "新浪微博",
 		"icon": "fa-weibo",
 		"href": "http://weibo.com/"
+	}, {
+		"title": "Font图标",
+		"icon": "fa-fonticons",
+		"href": "http://fontawesome.dashgame.com/"
 	}]
 }, {
 	"title": "这是一级导航",

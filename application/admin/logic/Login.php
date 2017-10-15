@@ -47,9 +47,9 @@ class Login {
         }
         if(!isset($row["rememberMe"])) $row["rememberMe"]=false;
         $where=[];
-        if(preg_phone($row["username"])){
+        if(check_phone($row["username"])){
             $where["mobile"]=$row["username"];
-        }elseif(preg_email($row["username"])){
+        }elseif(check_email($row["username"])){
             $where["email"]=$row["username"];
         }else{
             $where["username"]=$row["username"];
@@ -94,7 +94,7 @@ class Login {
         //登录日志
         $loginLog = new LoginLog();
         $loginLog->admin_id=$data->id;
-        $loginLog->account=serialize($data->visible(['id','group_id','username','true_name','mobile','email'])->toArray());
+        $loginLog->account=json_encode($data->visible(['id','group_id','username','true_name','mobile','email'])->toArray());
         $loginLog->save();
 
         unset($data);
@@ -172,7 +172,7 @@ class Login {
             $this->result["msg"]="请先登陆";
             return $this->result;
         }
-        $data=$this->admin->field("id,group_id,username,true_name,mobile,email,password,status,last_login_time")->where(["login_key"=>Cookie::get("login_key")])->find();
+        $data=$this->admin->field("id,group_id,username,true_name,mobile,email,img,password,status,last_login_time")->where(["login_key"=>Cookie::get("login_key")])->find();
         if(empty($data)){
             $this->result["code"]=0;
             $this->result["msg"]="登陆已过期，请重新登陆";

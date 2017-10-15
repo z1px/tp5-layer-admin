@@ -9,10 +9,27 @@
 namespace app\admin\controller;
 
 
+use app\admin\service\Admin;
 use app\admin\service\BehaviorLog;
 use app\admin\service\LoginLog;
 
 class Log extends Common {
+
+    protected $loginLog;
+    protected $behaviorLog;
+    protected $admin;
+
+
+    public function _empty(){
+        parent::_empty();
+    }
+
+
+    protected function _before(){
+        $this->loginLog=new LoginLog();
+        $this->behaviorLog=new BehaviorLog();
+        $this->admin=new Admin();
+    }
 
     /**
      * 登录日志
@@ -21,13 +38,10 @@ class Log extends Common {
     public function getLogin(){
 
         if($this->request->isPost()){
-
-            $loginLog=new LoginLog();
-
-            $this->result=$loginLog->getList($this->params);
+            $this->result=$this->loginLog->getList($this->params);
             return $this->_result();
         }else{
-            return $this->_fetch();
+            return $this->_fetch(["list_admin"=>$this->admin->getAll()]);
         }
     }
 
@@ -38,13 +52,10 @@ class Log extends Common {
     public function getBehavior(){
 
         if($this->request->isPost()){
-
-            $behaviorLog=new BehaviorLog();
-
-            $this->result=$behaviorLog->getList($this->params);
+            $this->result=$this->behaviorLog->getList($this->params);
             return $this->_result();
         }else{
-            return $this->_fetch();
+            return $this->_fetch(["list_admin"=>$this->admin->getAll()]);
         }
     }
 

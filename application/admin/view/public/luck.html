@@ -4,7 +4,7 @@
         <div class="admin-header-lock-img">
             <img src="__ADMIN_IMAGE__/0.jpg"/>
         </div>
-        <div class="admin-header-lock-name" id="lockUserName">{notempty name="Think.cookie.login_name"}{$Think.cookie.login_name}{/notempty}</div>
+        <div class="admin-header-lock-name" id="lockUserName">{notempty name="account.username"}{$account.username}{/notempty}</div>
         <div class="admin-header-lock-btn">
             <form class="layui-form">
                 <input type="hidden" name="lockUserName" value='{notempty name="account.username"}{$account.username}{/notempty}'>
@@ -20,12 +20,11 @@
 <script>
 
     layui.use(["layer","form"],function () {
-        var layer = layui.layer;
         var form = layui.form();
         var layerTips = parent.layer === undefined ? layui.layer : parent.layer; //获取父窗口的layer对象
 
         //锁屏
-        {empty name="Think.cookie.luck"}
+        {empty name="luck"}
         lock();
         {/empty}
 

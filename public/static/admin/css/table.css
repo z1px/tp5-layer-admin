@@ -16,3 +16,6 @@
 }
 
 .admin-main {margin: 0 10px;}
+
+/*表单搜索宽度自适应*/
+.layui-form-label{width: auto;}

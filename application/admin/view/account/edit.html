@@ -1,5 +1,6 @@
-{layout name="layout:form" /}
+{{extend name="layout:form1" /}
 
+{block name="main"}
 <form class="layui-form">
     <div class="layui-form-item">
         <label class="layui-form-label">用户组</label>
@@ -9,7 +10,8 @@
             {else/}
             <select name="group_id" lay-verify="required" lay-search="" {eq name="data.id" value="1"}disabled{/eq}>
                 <option value="">请选择用户组</option>
-                {volist name="group" id="vo"}
+                <option value="">请选择用户组</option>
+                {volist name="list_group" id="vo"}
                 <option value="{$vo.id}" {eq name="data.group_id" value="$vo.id"}selected{/eq} {neq name="vo.status" value="1"}disabled{/neq} >{$vo.name}{neq name="vo.status" value="1"}（已禁用）{/neq}</option>
                 {/volist}
             </select>
@@ -42,6 +44,14 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">用户头像</label>
+        <div class="layui-input-block">
+            <input type="file" name="file" class="layui-upload-file">
+            <input type="hidden" name="img" value="{$data.img}">
+            <img src="{$data.img}" id="img" style="max-height: 120px;max-width: 270px;">
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">密码</label>
         <div class="layui-input-inline">
             <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input" lay-verify="password">
@@ -58,8 +68,9 @@
     <div class="layui-form-item">
         <label class="layui-form-label">账号状态</label>
         <div class="layui-input-block">
-            <input type="radio" name="status" value="1" title="正常" {eq name='data.status' value='1'}checked{/eq}>
-            <input type="radio" name="status" value="2" title="禁用"{eq name='data.status' value='2'}checked{/eq}>
+            {volist name="list_status" id="vo"}
+            <input type="radio" name="status" value="{$key}" title="{$vo}" {eq name="data.status" value="$key"}checked{/eq}>
+            {/volist}
         </div>
     </div>
     <div class="layui-form-item">
@@ -70,59 +81,34 @@
         </div>
     </div>
 </form>
+{/block}
 
+{block name="foot"}
 <script>
-    layui.use(['form', 'layer'], function() {
-        var form = layui.form(),
-            layer = layui.layer;
-        var layerTips = parent.layerTips === undefined ? (parent.layer === undefined ? layui.layer : parent.layer) : layui.layerTips; //获取父窗口的layer对象
 
-        //自定义验证规则
-        form.verify({
-            username: [/^[A-Za-z0-9\-\_]{2,20}$/, '用户名只能是2-20位的字母、数字和下划线_及破折号-'],
-            phone:function (value) {
-                if(value){
-                    if(!/^1[34578][0-9]{9}$/.test(value)){
-                        return '手机号格式不正确';
-                    }
-                }
-            },
-            email:function (value) {
-                if(value){
-                    if(!/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(value)){
-                        return '邮箱号格式不正确';
-                    }
-                }
-            },
-            password: function (value) {
-                var pwd=$("input[name=password]").val();
-                if(!$("input[name=id]").val()||($("input[name=id]").length>0&&pwd)){
-                    if(!/^[\S]{6,12}$/.test(value)){
-                        return '密码必须6到12位，且不能出现空格';
-                    }
-                }
+    var edit_url='{:Url("admin/Account/edit")}';
+    var upload_img_url='{:Url("admin/Upload/img")}';
 
-            },
-            check_password: function(value) {
-                var pwd=$("input[name=password]").val();
-                if(value!=pwd){
-                    return '两次密码不一致';
-                }
-            },
-        });
+    layui.use(['upload'], function() {
+        var upload = layui.upload;
 
-        //监听提交
-        form.on('submit(form_edit)', function(data) {
-//            data.form.submit();
-            var ind_load=layerTips.load(2);
-            $.post("{:Url('admin/Account/edit')}",data.field,function (result) {
-                layerTips.close(ind_load);
-                if(result.code==1){
-
-                }
+        upload({
+            url: upload_img_url,
+            method: 'post', //上传接口的http类型
+            ext: 'jpg|jpeg|png|gif|bmp',
+            before: function(){
+                ind_load=layerTips.msg('图片上传中...',{icon: 16,shade: 0.01});
+            },
+            success: function(result){
+//                    layerTips.close(ind_load);
                 layerTips.msg(result.msg);
-            },"json");
-            return false;
+                if(result.code==0){
+                    $("input[name=img]").val(result.data.src);
+                    $('#img').attr("src",result.data.src);
+                }
+            }
         });
     });
+
 </script>
+{/block}

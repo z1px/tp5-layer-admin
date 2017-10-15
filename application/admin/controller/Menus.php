@@ -37,7 +37,7 @@ class Menus extends Common {
             $this->result=$this->menu->getList($this->params);
             return $this->_result();
         }else{
-            return $this->_fetch();
+            return $this->_fetch(["list_status"=>$this->menu->list_status,"list_type"=>$this->menu->list_type]);
         }
     }
 
@@ -56,7 +56,7 @@ class Menus extends Common {
             return $this->_result($url);
         }else{
             if(!isset($this->params["pid"])) $this->params["pid"]="";
-            return $this->_fetch(["menu"=>$this->menu->getMenuList(),"pid"=>$this->params["pid"]]);
+            return $this->_fetch(["menu"=>$this->menu->getMenuList(),"pid"=>$this->params["pid"],"list_status"=>$this->menu->list_status,"list_type"=>$this->menu->list_type]);
         }
     }
 
@@ -82,7 +82,7 @@ class Menus extends Common {
         }else{
             $this->result=$this->menu->getById($this->params["id"]);
             if($this->result["code"]==0) return $this->_jump();
-            return $this->_fetch(["data"=>$this->result["data"],"menu"=>$this->menu->getMenuList()]);
+            return $this->_fetch(["data"=>$this->result["data"],"menu"=>$this->menu->getMenuList(),"list_status"=>$this->menu->list_status,"list_type"=>$this->menu->list_type]);
         }
     }
 

@@ -9,14 +9,9 @@
 namespace app\admin\service;
 
 
-class BehaviorLog extends \app\admin\model\BehaviorLog {
+use \app\admin\model\BehaviorLog as BehaviorLogModel;
 
-    //返回结果
-    protected $result=[
-        "code"=>1,
-        "msg"=>"data normal",
-        "data"=>[],
-    ];
+class BehaviorLog extends BehaviorLogModel {
 
 
     public function getList($row){
@@ -26,32 +21,33 @@ class BehaviorLog extends \app\admin\model\BehaviorLog {
         $where=[];
         $order="id desc";
         if(isset($row["keyword"])) $where["title|module|controller|action|url|params|result"]=["like","%{$row["keyword"]}%"];
-        if(isset($row["title"])) $where["title"]=["like","%{$row["title"]}%"];
-        if(isset($row["params"])) $where["params"]=["like","%{$row["params"]}%"];
-        if(isset($row["result"])) $where["result"]=["like","%{$row["result"]}%"];
-        if(isset($row["module"])) $where["module"]=$row["module"];
-        if(isset($row["controller"])) $where["controller"]=$row["controller"];
-        if(isset($row["action"])) $where["action"]=$row["action"];
-        if(isset($row["type"])) $where["type"]=$row["type"];
-        if(isset($row["admin_id"])) $where["admin_id"]=$row["admin_id"];
+        array_map(function ($value) use (&$where,$row){
+            if(isset($row[$value])) $where[$value]=["like","%{$row[$value]}%"];
+        },
+            ["title","params","result"]
+        );
+        array_map(function ($value) use (&$where,$row){
+            if(isset($row[$value])) $where[$value]=$row[$value];
+        },
+            ["module","controller","action","type","admin_id"]
+        );
         if(isset($row["sort"])){
             if(!empty($row["sort"])){
                 if($row["sort"]=="status_name") $row["sort"]="status";
-                if(!isset($row["order"])) $row["order"]="desc";
                 $order="{$row["sort"]} {$row["order"]}";
             }
         }
-        if(!isset($row["begin_date"])) $row["begin_date"]="";
-        if(!isset($row["end_date"])) $row["end_date"]="";
-        if(!empty($row["begin_date"])&&empty($row["end_date"])){
-            $where["create_time"]=["egt",strtotime($row["begin_date"]." 00:00:00")];
-        }elseif(empty($row["begin_date"])&&!empty($row["end_date"])){
-            $where["create_time"]=["elt",strtotime($row["end_date"]." 23:59:59")];
-        }elseif(!empty($row["begin_date"])&&!empty($row["end_date"])){
-            $where["create_time"]=["between",[strtotime($row["begin_date"]." 00:00:00"),strtotime($row["end_date"]." 23:59:59")]];
+        if(!isset($row["begin_time"])) $row["begin_time"]="";
+        if(!isset($row["end_time"])) $row["end_time"]="";
+        if(!empty($row["begin_time"])&&empty($row["end_time"])){
+            $where["create_time"]=["egt",strtotime($row["begin_time"]." 00:00:00")];
+        }elseif(empty($row["begin_time"])&&!empty($row["end_time"])){
+            $where["create_time"]=["elt",strtotime($row["end_time"]." 23:59:59")];
+        }elseif(!empty($row["begin_time"])&&!empty($row["end_time"])){
+            $where["create_time"]=["between",[strtotime($row["begin_time"]." 00:00:00"),strtotime($row["end_time"]." 23:59:59")]];
         }
 
-        $list=$this->field("id,id copy_id,admin_id,title,module,controller,action,url,type,params,result,ip,area,create_time")->where($where)->page($row["pageIndex"],$row["pageSize"])->order($order)->select();
+        $list=$this->field("id,id copy_id,admin_id,title,module,controller,action,url,type,params,result res,ip,area,create_time")->where($where)->page($row["pageIndex"],$row["pageSize"])->order($order)->select();
         $this->result["rel"]=true;
         $this->result["count"]=$this->where($where)->Count();
         unset($row,$where);
@@ -59,9 +55,9 @@ class BehaviorLog extends \app\admin\model\BehaviorLog {
             $list=[];
         }else{
             foreach ($list as $key=>$value){
+                if(!empty($value->params)) $value->params="<pre>".var_export(json_decode($value->params,true),true)."</pre>";
+                if(!empty($value->res)) $value->res="<pre>".var_export(json_decode($value->res,true),true)."</pre>";
                 $list[$key]=$value->append(["username"])->toArray();
-                $list[$key]["params"]=array_map(function($val){return is_array($val)?str_replace('"',"",json_encode($val)):$val;},unserialize($list[$key]["params"]));
-                $list[$key]["result"]=array_map(function($val){return is_array($val)?str_replace('"',"",json_encode($val)):$val;},unserialize($list[$key]["result"]));
             }
             unset($key,$value);
         }

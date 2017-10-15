@@ -1,1 +1,11 @@
 {layout name="layout:main" /}
+
+<blockquote class="layui-elem-quote">
+    <p>ThinkPHP 版本：<?php echo THINK_VERSION; ?></p><hr>
+    <p>服务器系统：<?php echo php_uname('s');  ?></p><hr>
+    <p>WEB运行环境：<?php echo function_exists('apache_get_version')?apache_get_version():$_SERVER["SERVER_SOFTWARE"];  ?></p><hr>
+    <p>运行PHP版本：<?php echo 'PHP'.phpversion();?></p><hr>
+    <p>数据库信息：MySQL&nbsp;<?php echo @mysql_get_server_info();?></p><hr>
+    <p>上传大小限制：<?php echo ini_get('upload_max_filesize');?></p><hr>
+    <p>POST大小限制：<?php echo ini_get('post_max_size');?></p>
+</blockquote>
