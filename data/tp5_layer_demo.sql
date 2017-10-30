@@ -2,15 +2,15 @@
 Navicat MySQL Data Transfer
 
 Source Server         : localhost
-Source Server Version : 100122
+Source Server Version : 50624
 Source Host           : localhost:3306
 Source Database       : tp5_layer_demo
 
 Target Server Type    : MYSQL
-Target Server Version : 100122
+Target Server Version : 50624
 File Encoding         : 65001
 
-Date: 2017-10-15 14:22:02
+Date: 2017-10-30 10:42:39
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -27,6 +27,7 @@ CREATE TABLE `tp5_admin` (
   `email` varchar(50) DEFAULT NULL COMMENT '邮箱号',
   `mobile` varchar(20) DEFAULT NULL COMMENT '手机号',
   `password` varchar(50) NOT NULL COMMENT '密码',
+  `img` varchar(200) DEFAULT NULL COMMENT '管理员头像',
   `status` tinyint(2) DEFAULT '1' COMMENT '账号状态：1-正常，2-禁用',
   `last_login_time` int(11) DEFAULT NULL COMMENT '最后一次登录时间',
   `ip` varchar(30) DEFAULT NULL COMMENT '当前IP',
@@ -43,7 +44,7 @@ CREATE TABLE `tp5_admin` (
 -- ----------------------------
 -- Records of tp5_admin
 -- ----------------------------
-INSERT INTO `tp5_admin` VALUES ('1', '0', 'admin', '系统管理员', null, null, 'MDAwMDAwMDAwMGZjN2VkZDk3MWUzYmFmMmUxMTExMTE', '1', '1508047925', '127.0.0.1', '', '1500016980', '1508048062', 'a30189e6bfb02abf90657b43dced03a9');
+INSERT INTO `tp5_admin` VALUES ('1', '0', 'admin', '系统管理员', null, null, 'MDAwMDAwMDAwMGZjN2VkZDk3MWUzYmFmMmUxMTExMTE', null, '1', '1508047925', '127.0.0.1', '', '1500016980', '1508048062', 'a30189e6bfb02abf90657b43dced03a9');
 
 -- ----------------------------
 -- Table structure for tp5_admin_group
@@ -170,4 +171,3 @@ INSERT INTO `tp5_menu` VALUES ('37', '菜单授权列表', 'admin', 'Menus', 'me
 INSERT INTO `tp5_menu` VALUES ('38', '获取所有菜单', 'admin', 'Menus', 'getAll', '', '1', '1', '2', '7', '1500536434', '1500620314');
 INSERT INTO `tp5_menu` VALUES ('39', '修改菜单级别', 'admin', 'Menus', 'editMenuPid', '', '1', '1', '2', '7', '1500536434', '1500620314');
 INSERT INTO `tp5_menu` VALUES ('40', '修改菜单名称', 'admin', 'Menus', 'editMenuTitle', '', '1', '1', '2', '7', '1500536434', '1500620314');
-SET FOREIGN_KEY_CHECKS=1;
