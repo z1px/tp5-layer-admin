@@ -132,7 +132,7 @@ layui.config({
             type: 2,//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
             title: '个人信息',
             maxmin: true, //最大最小化
-            area : ['480px','500px'],//宽高
+            area : ['480px','540px'],//宽高
             content: url,
             resizing:function(layero){ //拉伸时修改高度
                 layero.find("iframe").height(layero.height()-layero.find(".layui-layer-title").height()-1)
