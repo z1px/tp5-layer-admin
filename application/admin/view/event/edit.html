@@ -1,7 +1,7 @@
 {{extend name="layout:form1" /}
 
 {block name="main"}
-<form class="layui-form">
+<form class="layui-form mb80">
     <div class="layui-form-item">
         <label class="layui-form-label">CP游戏</label>
         <div class="layui-input-block">
@@ -157,7 +157,7 @@
             <textarea name="remark" placeholder="请输入备注信息" class="layui-textarea">{$data.remark}</textarea>
         </div>
     </div>
-    <div class="layui-form-item">
+    <div class="layui-form-item button_fixed">
         <div class="layui-input-block">
             <input type="hidden" name="id" value="{$data.id}">
             <button class="layui-btn" lay-submit lay-filter="form_edit">立即提交</button>
